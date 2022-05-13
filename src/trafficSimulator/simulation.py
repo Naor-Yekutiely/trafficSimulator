@@ -23,8 +23,8 @@ class Simulation:
         self.vehicleCount = 0
         self.road_one_tp = 0
 
-    def create_road(self, start, end):
-        road = Road(start, end)
+    def create_road(self, start, end, name):
+        road = Road(start, end, name)
         self.roads.append(road)
         return road
 

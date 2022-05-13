@@ -29,7 +29,7 @@ class Graph:
         for e in self.G.edges:
             self.edgeToIndex.append(self.G.get_edge_data(e[0], e[1])["name"])
             edgesTuples.append(((self.G.nodes.get(e[0])["coordinates"]["x"], self.G.nodes.get(e[0])[
-                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"])))
+                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"]))
         return edgesTuples
 
     def getPath(self, source, target):

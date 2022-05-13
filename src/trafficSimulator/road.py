@@ -1,11 +1,12 @@
 from scipy.spatial import distance
 from collections import deque
 
+
 class Road:
-    def __init__(self, start, end):
+    def __init__(self, start, end, name):
         self.start = start
         self.end = end
-
+        self.name = name
         self.vehicles = deque()
 
         self.init_properties()
@@ -51,7 +52,8 @@ class Road:
                 # If traffic signal is red
                 if self.vehicles[0].x >= self.length - self.traffic_signal.slow_distance:
                     # Slow vehicles in slowing zone
-                    self.vehicles[0].slow(self.traffic_signal.slow_factor*self.vehicles[0]._v_max)
+                    self.vehicles[0].slow(
+                        self.traffic_signal.slow_factor*self.vehicles[0]._v_max)
                 if self.vehicles[0].x >= self.length - self.traffic_signal.stop_distance and\
                    self.vehicles[0].x <= self.length - self.traffic_signal.stop_distance / 2:
                     # Stop vehicles in the stop zone

@@ -12,9 +12,9 @@ class TrafficSignal:
 
     def set_default_config(self):
         self.cycle = [(False, True), (True, False)]
-        self.slow_distance = 10
-        self.slow_factor = 60
-        self.stop_distance = 20
+        self.slow_distance = 20
+        self.slow_factor = 15
+        self.stop_distance = 8
 
         self.current_cycle_index = 0
 
@@ -30,6 +30,6 @@ class TrafficSignal:
         return self.cycle[self.current_cycle_index]
 
     def update(self, sim):
-        cycle_length = 30
+        cycle_length = 10
         k = (sim.t // cycle_length) % 2
         self.current_cycle_index = int(k)
