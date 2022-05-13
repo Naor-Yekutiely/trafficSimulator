@@ -35,5 +35,5 @@ services:
       - ./grafana/dashboards/:/var/lib/grafana/dashboards/
 
 volumes:
-  grafana_data: {}
-  influxdb_data: {}
+  grafana_data:
+  influxdb_data:
