@@ -29,6 +29,7 @@ class Node:
         dis = []
         for node in self.nodes:
             #   vehicle.x >= road.length:
-            for v in node.vehicles:
-                # TODO: Add functionalty to hold for evrey node the closest vehicle to the Intersaction
-                dis.append({})
+            # 1. check if need to interpt the intersection
+
+            # 2. Find the road that needs to be free and block all others
+            return 0
