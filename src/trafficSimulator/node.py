@@ -1,69 +1,34 @@
 from scipy.spatial import distance
 from collections import deque
+import os
+import json
+
+from trafficSimulator.vehicle import Vehicle
+
 
 class Node:
-    def __init__(self, start, end, mode):
-        self.start = start
-        self.end = end
-        self.mode = mode # mode pick the direction
-        self.vehicles = deque()          
-        self.init_properties(mode)
+    def __init__(self, roadsDic):
+        self.nodes = []
+        self.roadsDic = roadsDic
+        self.initNodes()
 
-    def init_properties(self, mode):
-        if mode == 0:
-            self.length = distance.euclidean(self.start, self.end)
-            self.angle_sin = abs((self.start[1]-self.end[1])) / self.length
-            self.angle_cos = abs((self.start[0]-self.end[0])) / self.length
-            # self.angle = np.arctan2(self.end[1]-self.start[1], self.end[0]-self.start[0])
-        elif mode == 1:
-            self.length = distance.euclidean(self.start, self.end)
-            self.angle_sin = (self.end[1]-self.start[1]) / self.length
-            self.angle_cos = (self.end[0]-self.start[0]) / self.length
-            # self.angle = np.arctan2(self.end[1]-self.start[1], self.end[0]-self.start[0])
-        else:
-            pass
-            # self.length = distance.euclidean(self.start, self.end)
-            # self.angle_sin = (self.end[1]-self.start[1]) / self.length
-            # self.angle_cos = (self.end[0]-self.start[0]) / self.length
-            # self.angle = np.arctan2(self.end[1]-self.start[1], self.end[0]-self.start[0])
-        self.has_traffic_signal = False
+    def initNodes(self):
+        f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data.json")
+        self.nodeData = json.load(f)
+        for node in self.nodeData["nodes"]:
+            tmpRoads = []
+            for road in node["roads"]:
+                if(node["roads"][road] != "none"):
+                    tmpRoads.append({
+                        road: node["roads"][road]
+                    })
+            self.nodes.append(
+                {node["name"]: {"roads": tmpRoads, "vehicles": self.roadsDic[node["roads"][road]].vehicles}})
 
-    def set_traffic_signal(self, signal, group):
-        self.traffic_signal = signal
-        self.traffic_signal_group = group
-        self.has_traffic_signal = True
-
-    @property
-    def traffic_signal_state(self):
-        if self.has_traffic_signal:
-            i = self.traffic_signal_group
-            return self.traffic_signal.current_cycle[i]
-        return True
-
-    def update(self, dt):
-        n = len(self.vehicles)
-
-        if n > 0:
-            # Update first vehicle
-            self.vehicles[0].update(None, dt)
-            # Update other vehicles
-            for i in range(1, n):
-                lead = self.vehicles[i-1]
-                self.vehicles[i].update(lead, dt)
-
-             # Check for traffic signal
-            if self.traffic_signal_state:
-                # If traffic signal is green or doesn't exist
-                # Then let vehicles pass
-                self.vehicles[0].unstop()
-                for vehicle in self.vehicles:
-                    vehicle.unslow()
-            else:
-                # If traffic signal is red
-                if self.vehicles[0].x >= self.length - self.traffic_signal.slow_distance:
-                    # Slow vehicles in slowing zone
-                    self.vehicles[0].slow(self.traffic_signal.slow_factor*self.vehicles[0]._v_max)
-                if self.vehicles[0].x >= self.length - self.traffic_signal.stop_distance and\
-                   self.vehicles[0].x <= self.length - self.traffic_signal.stop_distance / 2:
-                    # Stop vehicles in the stop zone
-                    self.vehicles[0].stop()
+    def update(self):
+        dis = []
+        for node in self.nodes:
+            #   vehicle.x >= road.length:
+            for v in node.vehicles:
+                # TODO: Add functionalty to hold for evrey node the closest vehicle to the Intersaction
+                dis.append({})

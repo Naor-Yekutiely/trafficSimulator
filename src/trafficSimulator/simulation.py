@@ -18,6 +18,7 @@ class Simulation:
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
         self.roads = []         # Array to store roads
+        self.roadsDic = {}
         self.generators = []
         self.traffic_signals = []
         self.vehicleCount = 0
@@ -26,6 +27,7 @@ class Simulation:
     def create_road(self, start, end, name):
         road = Road(start, end, name)
         self.roads.append(road)
+        self.roadsDic[name] = road
         return road
 
     def create_roads(self, road_list):

@@ -3,10 +3,10 @@ from trafficSimulator import *
 
 
 sim = Simulation()
-
 G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
+#nodes = Node(sim.roadsDic)
 sim.create_signal([[G.getEdgeIndex("E_L_5")], [G.getEdgeIndex("E_55")]])
 
 # sim.create_roads([
@@ -17,7 +17,7 @@ sim.create_signal([[G.getEdgeIndex("E_L_5")], [G.getEdgeIndex("E_55")]])
 sim.create_gen({
     'vehicle_rate': 100,
     'vehicles': [
-        [50, {'path': G.getPath("V_0_4_U", "V_2_4_D")}],
+        [50, {'path': G.getPath("V_0_4_D", "V_2_4_D")}],
         [44, {'path': G.getPath("V_1_0_D", "V_1_8_D")}],
     ]
 })

@@ -22,23 +22,23 @@ class Vehicle:
         temp = randint(0, 1)
         if(temp):
             r_speed *= -1
-        if(r <= 3):
+        if(r <= 3):  # Bus
             self.l = 8
             self.s0 = 12  # minimum desired distance between the vehicle i and i-1
             self.v_max = 10 + r_speed  # maximum desired speed of the vehicle i
-            self.a_max = 4  # maximum acceleration for the vehicle i.
+            self.a_max = 8  # maximum acceleration for the vehicle i.
             self.b_max = 3.90  # comfortable deceleration for the vehicle i.
-        if(r > 10):
+        if(r > 10):  # Car
             self.l = 4
             self.s0 = 8  # minimum desired distance between the vehicle i and i-1
             self.v_max = 30 + r_speed  # maximum desired speed of the vehicle i
-            self.a_max = 1.44  # maximum acceleration for the vehicle i.
+            self.a_max = 10  # maximum acceleration for the vehicle i.
             self.b_max = 8.5  # comfortable deceleration for the vehicle i.
-        if(r > 3 and r <= 10):
+        if(r > 3 and r <= 10):  # Motorcycle
             self.l = 2
             self.s0 = 5  # minimum desired distance between the vehicle i and i-1
             self.v_max = 40 + r_speed  # maximum desired speed of the vehicle i
-            self.a_max = 10  # maximum acceleration for the vehicle i.
+            self.a_max = 15  # maximum acceleration for the vehicle i.
             self.b_max = 4.90  # comfortable deceleration for the vehicle i.
 
         self.T = 1  # the reaction time of the i-th vehicle’s driver

@@ -1,0 +1,30 @@
+{
+    "nodes":[
+        {
+            "name": "V_1_4",
+            "vertices" : ["V_1_4_U","V_1_4_D"],
+            "roads":{
+                "up_left":"none",
+                "up_right":"none",
+
+                "up": "E_L_5",
+
+                "left_up":"E_38",
+                "left_down":"E_55",
+
+                "right_up":"E_37",
+                "right_down":"E_54",
+
+                "down_left":"none",
+                "down_right":"none",
+
+                "down":"E_L_18",
+
+                "inner_left":"E_1_4_D",
+                "inner_right":"E_1_4_U"
+            }
+        }
+        
+    ]
+}
+
