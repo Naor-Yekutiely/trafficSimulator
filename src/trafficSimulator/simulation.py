@@ -1,4 +1,5 @@
 from .road import Road
+from .node import Node
 from copy import deepcopy
 from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
@@ -18,6 +19,7 @@ class Simulation:
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
         self.roads = []         # Array to store roads
+        self.nodes = []        # Array to hold Nodes
         self.roadsDic = {}
         self.generators = []
         self.traffic_signals = []
@@ -45,15 +47,15 @@ class Simulation:
         self.traffic_signals.append(sig)
         return sig
 
-    def stam(self, nodes):
-        self.nodes = nodes
+    def create_nodes(self, graph):
+        self.nodes = Node(self.roadsDic, graph)
 
     def update(self):
         # Update every road
         for road in self.roads:
             road.update(self.dt)
-            if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
-                print("a")
+            # if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
+            #     print("a")
         # Add vehicles
         for gen in self.generators:
             gen.update()
@@ -61,6 +63,9 @@ class Simulation:
         for signal in self.traffic_signals:
             signal.update(self)
 
+        tmp = self.nodes.update()
+        if(tmp == -1):
+            tt = 4
         # Check roads for out of bounds vehicle
         for index, road in enumerate(self.roads):
             # If road has no vehicles, continue
@@ -88,6 +93,7 @@ class Simulation:
                 # In all cases, remove it from its road
                 road.vehicles.popleft()
         # Increment time
+
         self.t += self.dt
         self.frame_count += 1
 

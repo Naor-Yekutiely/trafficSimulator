@@ -1,43 +1,99 @@
+from operator import index
 from scipy.spatial import distance
 from collections import deque
 import os
 import json
+from trafficSimulator.graph import Graph
 
 from trafficSimulator.vehicle import Vehicle
 
 
 class Node:
-    def __init__(self, roadsDic):
+    def __init__(self, roadsDic, graph):
         self.nodes = []
         self.roadsDic = roadsDic
+        self.G = graph
         self.initNodes()
 
     def initNodes(self):
         f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data.json")
         self.nodeData = json.load(f)
         for node in self.nodeData["nodes"]:
-            tmpRoads = []
-            # tmpRoads = {
-            #     "roads": [],
-            #     "priority": -1
-            # }
-            # filter out none roads
-            for road in node["roads"]:
+            # tmpRoads = []
+            tmpIcommingRoads = []
+            tmpOutgoingRoads = []
+            # for road in node["roads"]:
+            #     if(node["roads"][road]["name"] != "none"):
+            #         tmpRoads.append({
+            #             "road": node["roads"][road]["name"],
+            #             "priority": node["roads"][road]["priority"],
+            #             "roadobj": self.roadsDic[node["roads"][road]["name"]]
+            #         })
+            for road in node["incomming_roads"]:
                 if(node["roads"][road]["name"] != "none"):
-                    tmpRoads.append({
+                    tmpIcommingRoads.append({
                         "road": node["roads"][road]["name"],
                         "priority": node["roads"][road]["priority"],
-                        "roadobj":self.roadsDic[node["roads"][road]["name"]]
+                        "roadobj": self.roadsDic[node["roads"][road]["name"]]
                     })
-                    # tmpRoads.priority = node["roads"][road]
+            for road in node["outgoing_roads"]:
+                if(node["roads"][road]["name"] != "none"):
+                    tmpOutgoingRoads.append({
+                        "road": node["roads"][road]["name"],
+                        "priority": node["roads"][road]["priority"],
+                        "roadobj": self.roadsDic[node["roads"][road]["name"]]
+                    })
+            #self.nodes.append({"roads": tmpRoads,"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads })
             self.nodes.append(
-                {node["name"]: {"roads": tmpRoads}})
-                # "vehicles": self.roadsDic[node["roads"][road]].vehicles}
-    def update(self):
-        dis = []
-        for node in self.nodes:
-            #   vehicle.x >= road.length:
-            # 1. check if need to interpt the intersection
+                {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads})
 
-            # 2. Find the road that needs to be free and block all others
+    def update(self):
+        for node in self.nodes:
+            nearst_vehicles = []
+            for road in node["incomming_roads"]:
+                tmp_min = 1000  # edge cases??
+                for vehicle in road["roadobj"].vehicles:
+                    if (abs(vehicle.x - road["roadobj"].length) < tmp_min):
+                        tmp_min = abs(vehicle.x - road["roadobj"].length)
+                        nearst_vehicles.append({
+                            "vehicle": vehicle, "priority": road["priority"]})
+            if (len(nearst_vehicles) > 1):
+                min_priorty = 100  # edge cases??
+                for v in nearst_vehicles:
+                    if(v["priority"] < min_priorty):
+                        min_priorty = v["priority"]
+                for index, v in enumerate(nearst_vehicles):
+                    if(v["priority"] != min_priorty):
+                        nearst_vehicles.pop(index)
+                if (len(nearst_vehicles) > 1):
+                    #   Check for conflict
+                    paths = []
+                    for index, v in enumerate(nearst_vehicles):
+                        p = []
+                        for edgeIndex in nearst_vehicles[index]['vehicle'].path:
+                            for node in self.G.graphData['edges'][edgeIndex]['nodes']:
+                                p.append(node)
+                        paths.append(p)
+                    # TODO: paths is wrong and need to add vertex's to paths
+                    u = set.intersection(*paths)
+                    tmp = 4
+                else:
+                    # Go by priorty
+                    tmp = 2
+            else:
+                continue
+                # Only one vehicle in the node..
+
+                # for all incoming roads:  DONE
+                #   find nearest car in evrey node  DONE
+                #   find min priorty in cars        DONE
+                #   elimnate all cars from priorty array that dosnt equal the min priorty in the priorty array  DONE
+                #   if priorty array len > 1:  DONE
+                #       if exsist conflict: (if cars have joined vertex that is part of the node)
+                #           settle the conflict:
+                #             the winner is the one with the min number of edges from the joined conflicted vertex
+                #       else:
+                #           continue (do nothing)
+                #   else: (no cars in the node or there is a winning priorty one)
+                #      go by priorty
             return 0

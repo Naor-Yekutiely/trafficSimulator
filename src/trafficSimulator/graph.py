@@ -60,3 +60,9 @@ class Graph:
                     nodePath[index], nodePath[index+1])["name"]
                 pathIndex.append(self.getEdgeIndex(name))
         return pathIndex
+
+    def indexPathToEdgesPath(self, indexPath):
+        edgePath = []
+        for index in indexPath:
+            edgePath.append(self.edgeToIndex[index])
+        return edgePath
