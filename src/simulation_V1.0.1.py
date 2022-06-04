@@ -6,9 +6,9 @@ sim = Simulation()
 G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
-#nodes = Node(sim.roadsDic)
+nodes = Node(sim.roadsDic)
 sim.create_signal([[G.getEdgeIndex("E_L_5")], [G.getEdgeIndex("E_55")]])
-
+sim.stam(nodes)
 # sim.create_roads([
 #     ((466, -143), (526, -143)),
 # ])
@@ -21,7 +21,6 @@ sim.create_gen({
         [44, {'path': G.getPath("V_1_0_D", "V_1_8_D")}],
     ]
 })
-
 # Start simulation
 win = Window(sim)
 win.zoom = 1.5

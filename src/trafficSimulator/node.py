@@ -17,14 +17,22 @@ class Node:
         self.nodeData = json.load(f)
         for node in self.nodeData["nodes"]:
             tmpRoads = []
+            # tmpRoads = {
+            #     "roads": [],
+            #     "priority": -1
+            # }
+            # filter out none roads
             for road in node["roads"]:
-                if(node["roads"][road] != "none"):
+                if(node["roads"][road]["name"] != "none"):
                     tmpRoads.append({
-                        road: node["roads"][road]
+                        "road": node["roads"][road]["name"],
+                        "priority": node["roads"][road]["priority"],
+                        "roadobj":self.roadsDic[node["roads"][road]["name"]]
                     })
+                    # tmpRoads.priority = node["roads"][road]
             self.nodes.append(
-                {node["name"]: {"roads": tmpRoads, "vehicles": self.roadsDic[node["roads"][road]].vehicles}})
-
+                {node["name"]: {"roads": tmpRoads}})
+                # "vehicles": self.roadsDic[node["roads"][road]].vehicles}
     def update(self):
         dis = []
         for node in self.nodes:

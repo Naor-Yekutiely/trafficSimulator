@@ -45,11 +45,15 @@ class Simulation:
         self.traffic_signals.append(sig)
         return sig
 
+    def stam(self, nodes):
+        self.nodes = nodes
+
     def update(self):
         # Update every road
         for road in self.roads:
             road.update(self.dt)
-
+            if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
+                print("a")
         # Add vehicles
         for gen in self.generators:
             gen.update()

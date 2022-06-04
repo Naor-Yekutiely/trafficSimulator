@@ -4,24 +4,70 @@
             "name": "V_1_4",
             "vertices" : ["V_1_4_U","V_1_4_D"],
             "roads":{
-                "up_left":"none",
-                "up_right":"none",
+                "up_left":{
+                    "name": "none",
+                    "priority": 2
+                },
+                "up_right":{
+                    "name": "none",
+                    "priority": 2
+                },
+                "up":{
+                    "name": "E_L_5",
+                    "priority": 2
+                },
+                
 
-                "up": "E_L_5",
+                "right_up":{
+                    "name": "E_37",
+                    "priority": 1
+                },
+                "right_down":{
+                    "name": "E_54",
+                    "priority": 1
+                },
+                "right":{
+                    "name": "none",
+                    "priority": 1
+                },
 
-                "left_up":"E_38",
-                "left_down":"E_55",
 
-                "right_up":"E_37",
-                "right_down":"E_54",
+                "left_up":{
+                    "name": "E_38",
+                    "priority": 1
+                },
+                "left_down":{
+                    "name": "E_55",
+                    "priority": 1
+                },
+                "left":{
+                    "name": "none",
+                    "priority": 1
+                },
 
-                "down_left":"none",
-                "down_right":"none",
 
-                "down":"E_L_18",
 
-                "inner_left":"E_1_4_D",
-                "inner_right":"E_1_4_U"
+                "down_left":{
+                    "name": "none",
+                    "priority": 2
+                },
+                "down_right":{
+                    "name": "none",
+                    "priority": 2
+                },
+                "down":{
+                    "name": "E_L_18",
+                    "priority": 2
+                },
+
+                "inner_left":{
+                    "name": "E_1_4_D",
+                    "priority": 0
+                },
+                "inner_right":{
+                    "name": "E_1_4_U",
+                    "priority": 0
+                }
             }
         }
         
