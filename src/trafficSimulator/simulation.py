@@ -64,7 +64,9 @@ class Simulation:
             signal.update(self)
 
         tmp = self.nodes.update()
-        if(tmp == -1):
+        if(tmp == -5):
+            tt = 4
+        elif(tmp == -2):
             tt = 4
         # Check roads for out of bounds vehicle
         for index, road in enumerate(self.roads):

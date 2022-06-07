@@ -16,8 +16,8 @@ sim.create_nodes(G)
 sim.create_gen({
     'vehicle_rate': 100,
     'vehicles': [
-        [50, {'path': G.getPath("V_1_6_U", "V_1_3_U")}],
-        [44, {'path': G.getPath("V_1_3_D", "V_1_6_D")}],
+        [50, {'path': G.getPath("V_1_6_U", "V_1_2_U")}],
+        [44, {'path': G.getPath("V_0_4_D", "V_2_4_U")}],
     ]
 })
 # Start simulation

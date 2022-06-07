@@ -70,7 +70,7 @@
             "incomming_roads": {
                 "up": {
                     "name": "E_L_5",
-                    "priority": 2
+                    "priority": 1
                 },
                 "right_up": {
                     "name": "E_37",
