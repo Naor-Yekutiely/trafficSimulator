@@ -91,7 +91,7 @@ class Node:
                            u = self.G.edgesNodes[self.G.edgeToIndex[vehicle['vehicle'].path[vehicle['vehicle'].current_road_index]]][0]
                            distance.append({self.G.edgeToIndex[vehicle['vehicle'].path[vehicle['vehicle'].current_road_index]]:len(self.G.getPath(u,v))})
                        #    if the dustance is the same then go be position -> The winner is the one closest to the node
-
+                    
                        # TODO: handle trafficlights...
                        return -2
                 else:
