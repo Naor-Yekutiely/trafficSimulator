@@ -1,0 +1,17 @@
+Upadte Nodes Pseudo Code Algorithm for DTLS:
+
+    for all nodes:
+        for all incoming roads:
+            find nearest car in evrey node
+            find min priorty in cars
+            elimnate all cars from priorty array that dosn't equal the min priorty in the priorty array
+            if priorty array len > 1:
+                if exsist conflict: (if cars have joined vertex that is part of the node)
+                    settle the conflict:
+                    the winner is the one with the min number of edges from the joined conflicted vertex
+                else:
+                    continue (do nothing)
+            else: (no cars in the node or there is a winning priorty one)
+                go by priorty
+
+Upadte Veichle Path Code Algorithm for DTLS:
