@@ -3,6 +3,8 @@ from .node import Node
 from copy import deepcopy
 from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
+import os
+import json
 
 
 class Simulation:
@@ -41,19 +43,34 @@ class Simulation:
         self.generators.append(gen)
         return gen
 
-    def create_signal(self, roads, config={}):
+    def create_signal(self, roads, cycle_length, config={}):
         roads = [[self.roads[i] for i in road_group] for road_group in roads]
-        sig = TrafficSignal(roads, config)
+        sig = TrafficSignal(roads, cycle_length, config)
         self.traffic_signals.append(sig)
         return sig
+
+    def create_signals(self, graph):
+        f = open(f"{os.getcwd()}/src/trafficSimulator/Signals_Data.json")
+        self.signals_data = json.load(f)
+        for signal in self.signals_data["signals"]:
+            group_1 = []
+            group_2 = []
+            for road in signal['group_1']:
+                group_1.append(graph.getEdgeIndex(road))
+            for road in signal['group_2']:
+                group_2.append(graph.getEdgeIndex(road))
+            self.create_signal([group_1, group_2], signal['cycle_length'])
 
     def create_nodes(self, graph):
         self.nodes = Node(self.roadsDic, graph)
 
     def update(self):
         # Update every road
-        for road in self.roads:
-            road.update(self.dt)
+        for index, road in enumerate(self.roads):
+            #next_road = None
+            # if(index + 1 < len(self.roads)):
+            #next_road = self.roads[index+1]
+            road.update(self.dt, self.roads)
             # if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
             #     print("a")
         # Add vehicles

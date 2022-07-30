@@ -7,18 +7,16 @@ G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
 sim.create_nodes(G)
-# sim.create_signal([[G.getEdgeIndex("E_L_5"), G.getEdgeIndex("E_1_4_D")], [G.getEdgeIndex("E_37"), G.getEdgeIndex("E_54")]])
-#sim.create_signal([[G.getEdgeIndex("E_12")], [G.getEdgeIndex("E_0_0_D")]])
-# sim.create_roads([
-#     ((466, -143), (526, -143)),
-# ])
+#sim.create_signal([[G.getEdgeIndex("E_L_5"), G.getEdgeIndex("E_1_4_D")], [G.getEdgeIndex("E_37"), G.getEdgeIndex("E_55")]])
+sim.create_signals(G)
 
 # TODO missing leaf nodes on the right of all rows 1-4.. need another node 17
 sim.create_gen({
-    'vehicle_rate': 100,
+    'vehicle_rate': 200,
     'vehicles': [
-        [50, {'path': G.getPath("V_1_6_U", "V_1_2_U")}],
-        [44, {'path': G.getPath("V_0_4_D", "V_2_4_U")}],
+        [100, {'path': G.getPath("V_1_6_U", "V_1_2_U")}],
+        [50, {'path': G.getPath("V_0_4_D", "V_2_4_U")}],
+        [150, {'path': G.getPath("V_1_0_D", "V_1_7_D")}],
         # [45, {'path': G.getPath("V_0_1_U", "V_1_0_U")}],
     ]
 })

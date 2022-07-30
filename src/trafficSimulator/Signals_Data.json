@@ -1,0 +1,21 @@
+{
+    "signals": [{
+            "name": "V_1_4",
+            "cycle_length": 20,
+            "group_1": ["E_L_5", "E_1_4_D"],
+            "group_2": ["E_37", "E_55"]
+        },
+        {
+            "name": "V_1_3",
+            "cycle_length": 8,
+            "group_2": ["E_L_17", "E_1_3_U"],
+            "group_1": ["E_38", "E_56"]
+        },
+        {
+            "name": "V_1_5",
+            "cycle_length": 8,
+            "group_1": ["E_1_5_D"],
+            "group_2": ["E_36", "E_54"]
+        }
+    ]
+}

@@ -50,7 +50,7 @@ class Node:
             self.nodes.append(
                 {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "vertices": tmpVertices})
 
-    def update(self, isDTLS):
+    def update(self, isDTLS=False):
         if(isDTLS):  # DTLS ROW(Right Of Way)
             for node in self.nodes:
                 nearst_vehicles = []
