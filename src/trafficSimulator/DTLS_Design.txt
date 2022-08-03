@@ -15,3 +15,21 @@ Upadte Nodes Pseudo Code Algorithm for DTLS:
                 go by priorty
 
 Upadte Veichle Path Code Algorithm for DTLS:
+option_1(graph G = (V, E),x)
+1. A = smartSwapCanadeites(x), A is a sub group of E of size x <= |E|
+2. foreach h,index i in getPossibleGraphs(A): , h is one of the 2^(|A|) possible ways to direct the graph. i is the index of graph h.
+3.        sum = [2^|A|] 
+4.        foreach v in Veichles
+5.              sum[i] += dijikstra(graph h, v) 
+6. return A[indexOfMin(sum)]
+
+option_2(graph G = (V,E))
+1.while(true):
+2.  generateNewVehicles() # And update all edges weights with respect to a factor that is a function of the distance from the edge.
+3.  if(t % T == 0): # t - current time, T - frequency of edges flip.
+4.      resetAllEdgesWeights()
+5.      flipUnusedEdges() # An unused edge is a edge that dosn't Appear in the first X edges of any of the current paths. X will be selected by trail and error.
+6.  dijikstraAllVehicles() # calculate the shortest path for each veichle. Make sure to update edges weights with respect to a factor that is a function of the distance from the edge.
+
+
+

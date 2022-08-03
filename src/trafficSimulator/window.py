@@ -164,11 +164,11 @@ class Window:
         l, h = size
         # diffrent color for diffrent
         if l == 2:  # motor cycle
-            color = (255, 0, 0)
+            color = (0, 255, 255)
         if l == 4:  # private
-            color = (0, 255, 0)
+            color = (255, 255, 0)
         if l == 8:  # truck
-            color = (0, 0, 255)
+            color = (255, 0, 255)
 
         if angle:
             cos, sin = np.cos(angle), np.sin(angle)

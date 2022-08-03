@@ -31,12 +31,12 @@ class TrafficSignal:
         return self.cycle[self.current_cycle_index]
 
     def update(self, sim):
-        if(self.toggle):
-            self.current_cycle_index = int(not self.current_cycle_index)
-        else:
+        # if(self.toggle):
+            # self.current_cycle_index = int(not self.current_cycle_index)
+        # else:
             k = (sim.t // self.cycle_length) % 2
             self.current_cycle_index = int(k)
 
     def toggle(self):
         self.toggle_state = not self.toggle_state
-        #self.current_cycle_index = int(not self.current_cycle_index)
+        # self.current_cycle_index = int(not self.current_cycle_index)
