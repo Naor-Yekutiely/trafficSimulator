@@ -19,6 +19,9 @@ sim.create_gen({
         [90, {'path': G.getPath("V_1_0_D", "V_1_7_D")}],
         [30, {'path': G.getPath("V_2_1_U", "V_0_6_U")}],
         [80, {'path': G.getPath("V_0_0_D", "V_1_5_D")}],
+        [80, {'path': G.getPath("V_3_0_U", "V_3_17_U")}],
+        [80, {'path': G.getPath("V_1_17_U", "V_2_0_D")}],
+        [80, {'path': G.getPath("V_1_0_D", "V_3_16_D")}],
         # [45, {'path': G.getPath("V_0_1_U", "V_1_0_U")}],
     ]
 })
