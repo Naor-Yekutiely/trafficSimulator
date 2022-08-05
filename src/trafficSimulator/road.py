@@ -30,20 +30,23 @@ class Road:
             return self.traffic_signal.current_cycle[i]
         return True
 
-    def is_next_road_not_has_place(self, vehicle, roads):
+    def is_has_next_road(self, vehicle):
+        return vehicle.current_road_index + 1 < len(vehicle.path)
+
+    def is_next_road_full(self, vehicle, roads):
         next_road = roads[vehicle.path[vehicle.current_road_index + 1]]
-        if(len(next_road.vehicles) > 0):
-            first_vehicle_in_next_road = next_road.vehicles[-1]
-        else:
+        if(len(next_road.vehicles) == 0):
             return False
-        if(first_vehicle_in_next_road.x < 12):  # min_Delta = len 0f max vechile men + safty self.l = 8
-            return True
-        return False
+        else:
+            first_vehicle_in_next_road = next_road.vehicles[-1]
+            if(first_vehicle_in_next_road.x < 12):  # min_Delta = len 0f max vechile men + safty self.l = 8
+                return True
+            return False
 
     def is_leaving_current_road(self):
         if(len(self.vehicles) > 0):
             last_vehicle_in_current_road = self.vehicles[0]
-            if(self.length - last_vehicle_in_current_road.x < 2):
+            if(self.length - last_vehicle_in_current_road.x < 6):
                 return True
             return False
         else:
@@ -67,12 +70,13 @@ class Road:
                 self.vehicles[0].unstop()
                 for vehicle in self.vehicles:
                     vehicle.unslow()
-                    if(vehicle.current_road_index + 1 < len(vehicle.path) and self.is_leaving_current_road() and self.is_next_road_not_has_place(vehicle, roads)) and self.has_traffic_signal:
-                        # vehicle.stop()
+                    if(self.is_has_next_road(vehicle) and self.is_leaving_current_road() and self.is_next_road_full(vehicle, roads)):
+                        vehicle.stop()
                         # self.traffic_signal.current_cycle[i]
-                        self.traffic_signal.toggle()
-                    elif self.has_traffic_signal and self.traffic_signal.toggle:
-                        self.traffic_signal.toggle()
+                        #self.traffic_signal.toggle()
+                    else:
+                        #self.traffic_signal.toggle()
+                        vehicle.unstop()
 
                     # else:
                     #     # vehicle.unslow()
