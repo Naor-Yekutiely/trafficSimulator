@@ -1,3 +1,4 @@
+from unittest import case
 from .road import Road
 from .node import Node
 from copy import deepcopy
@@ -28,8 +29,8 @@ class Simulation:
         self.vehicleCount = 0
         self.road_one_tp = 0
 
-    def create_road(self, start, end, name):
-        road = Road(start, end, name)
+    def create_road(self, start, end, name, wieght):
+        road = Road(start, end, name, wieght)
         self.roads.append(road)
         self.roadsDic[name] = road
         return road
@@ -98,6 +99,17 @@ class Simulation:
                 if vehicle.current_road_index + 1 < len(vehicle.path):
                     # Update current road to next road
                     vehicle.current_road_index += 1
+                    # dicrease leaving roads wieght and increase added roads wieght
+                    # TODO: Why sum roads get to negative wieghts?
+                    if(vehicle.l == 8):  # A bus is switching roads
+                        self.roads[vehicle.current_road_index-1].wieght -= 0.3
+                        self.roads[vehicle.current_road_index].wieght += 0.3
+                    elif(vehicle.l == 4):  # A car is switching roads
+                        self.roads[vehicle.current_road_index-1].wieght -= 0.2
+                        self.roads[vehicle.current_road_index].wieght += 0.2
+                    else:  # A  motorcycle is switching roads
+                        self.roads[vehicle.current_road_index-1].wieght -= 0.1
+                        self.roads[vehicle.current_road_index].wieght += 0.1
                     # Create a copy and reset some vehicle properties
                     new_vehicle = deepcopy(vehicle)
                     new_vehicle.x = 0

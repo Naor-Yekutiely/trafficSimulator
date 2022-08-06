@@ -3,10 +3,11 @@ from collections import deque
 
 
 class Road:
-    def __init__(self, start, end, name):
+    def __init__(self, start, end, name, wieght):
         self.start = start
         self.end = end
         self.name = name
+        self.wieght = wieght
         self.vehicles = deque()
 
         self.init_properties()
@@ -39,7 +40,8 @@ class Road:
             return False
         else:
             first_vehicle_in_next_road = next_road.vehicles[-1]
-            if(first_vehicle_in_next_road.x < 12):  # min_Delta = len 0f max vechile men + safty self.l = 8
+            # min_Delta = len 0f max vechile men + safty self.l = 8
+            if(first_vehicle_in_next_road.x < 12):
                 return True
             return False
 
@@ -73,9 +75,9 @@ class Road:
                     if(self.is_has_next_road(vehicle) and self.is_leaving_current_road() and self.is_next_road_full(vehicle, roads)):
                         vehicle.stop()
                         # self.traffic_signal.current_cycle[i]
-                        #self.traffic_signal.toggle()
+                        # self.traffic_signal.toggle()
                     else:
-                        #self.traffic_signal.toggle()
+                        # self.traffic_signal.toggle()
                         vehicle.unstop()
 
                     # else:

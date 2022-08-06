@@ -30,9 +30,10 @@ class Graph:
         edgesTuples = []
         for e in self.G.edges:
             self.edgeToIndex.append(self.G.get_edge_data(e[0], e[1])["name"])
-            self.edgesNodes[self.G.get_edge_data(e[0], e[1])["name"]] = [e[0],e[1]]
+            self.edgesNodes[self.G.get_edge_data(e[0], e[1])["name"]] = [
+                e[0], e[1]]
             edgesTuples.append(((self.G.nodes.get(e[0])["coordinates"]["x"], self.G.nodes.get(e[0])[
-                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"]))
+                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"], self.G.get_edge_data(e[0], e[1])['weight']))
         return edgesTuples
 
     def getPath(self, source, target):

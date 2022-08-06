@@ -13,7 +13,7 @@ class Vehicle:
             setattr(self, attr, val)
 
         # Calculate properties
-        self.init_properties()
+        self.init_properties(config)
 
     def set_default_config(self):
         # diff cars --- private car: 90%, trucks: 3%, motor-cycle: 7%
@@ -54,9 +54,11 @@ class Vehicle:
     def __repr__(self):
         return str(self.l)
 
-    def init_properties(self):
+    def init_properties(self, config):
         self.sqrt_ab = 2*np.sqrt(self.a_max*self.b_max)
         self._v_max = self.v_max
+        self.source = config['source']
+        self.target = config['target']
 
     def update(self, lead, dt):
         # Update position and velocity
