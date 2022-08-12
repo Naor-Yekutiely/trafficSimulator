@@ -51,6 +51,7 @@ class VehicleGenerator:
                 # If there is space for the generated vehicle; add it
                 self.upcoming_vehicle.time_added = self.sim.t
                 road.vehicles.append(self.upcoming_vehicle)
+                self.upcoming_vehicle.current_road = road
                 # increase added roads wieght
                 if(self.upcoming_vehicle.l == 8):  # A bus is switching roads
                     road.wieght += 0.3

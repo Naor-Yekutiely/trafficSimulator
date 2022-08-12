@@ -32,11 +32,11 @@ class Road:
         return True
 
     def is_has_next_road(self, vehicle):
-        return vehicle.current_road_index + 1 < len(vehicle.path)
-        # return len(vehicle.path) > 0
+        return len(vehicle.path) > 1
 
     def is_next_road_full(self, vehicle, roads):
-        next_road = roads[vehicle.path[vehicle.current_road_index + 1]]
+        # path gets trimmed by time.. current road is always vehicle.path[0] -> next road is always vehicle.path[1]
+        next_road = roads[vehicle.path[1]]
         if(len(next_road.vehicles) == 0):
             return False
         else:
@@ -53,7 +53,11 @@ class Road:
                 return True
             return False
         else:
-            return False
+            return False\
+
+
+    def is_last_vehicle(self, vehicle):
+        return vehicle == self.vehicles[0]
 
     def update(self, dt, roads):
         n = len(self.vehicles)
@@ -73,17 +77,10 @@ class Road:
                 self.vehicles[0].unstop()
                 for vehicle in self.vehicles:
                     vehicle.unslow()
-                    if(self.is_has_next_road(vehicle) and self.is_leaving_current_road() and self.is_next_road_full(vehicle, roads)):
+                    if(self.is_has_next_road(vehicle) and self.is_leaving_current_road() and self.is_next_road_full(vehicle, roads) and self.is_last_vehicle(vehicle)):
                         vehicle.stop()
-                        # self.traffic_signal.current_cycle[i]
-                        # self.traffic_signal.toggle()
                     else:
-                        # self.traffic_signal.toggle()
                         vehicle.unstop()
-
-                    # else:
-                    #     # vehicle.unslow()
-                    #     vehicle.unstop()
             else:
                 # If traffic signal is red
                 if self.vehicles[0].x >= self.length - self.traffic_signal.slow_distance:

@@ -110,31 +110,37 @@ class Simulation:
                         # TODO: imlement DTLS behavior here.
                         tmp = 0
                     else:
+                        # if(vehicle.uuid == 'naor_yap'): This is good to track a spisific vehicle
+                        #     print(f'path: {vehicle.edgesPath}')
                         new_vehicle = deepcopy(vehicle)
                         new_vehicle.x = 0
                         # check for a better path
                         source = self.G.edgesNodes[road.name][1]
                         target = vehicle.target
                         #old_path = vehicle.path
-                        vehicle.path = self.G.getPath(source, target)
-                        vehicle.edgesPath = self.G.indexPathToEdgesPath(
-                            vehicle.path)
-                        if(len(vehicle.path) > 0):
-                            next_road_index = vehicle.path[0]
+                        new_vehicle.path = self.G.getPath(source, target)
+                        new_vehicle.edgesPath = self.G.indexPathToEdgesPath(
+                            new_vehicle.path)
+                        if(len(new_vehicle.path) > 0):
+                            next_road_index = new_vehicle.path[0]
                             self.roads[next_road_index].vehicles.append(
                                 new_vehicle)
+                            new_vehicle.current_road = self.roads[next_road_index]
+                        else:  # Leaving simulation
+                           # vehicle.current_road
+                            self.vehicleCount -= 1
                         # decrese the leaving road weight and increasse comming road wieght.
-                        if(vehicle.l == 8):  # A bus is switching roads
+                        if(new_vehicle.l == 8):  # A bus is switching roads
                             road.wieght -= 0.3
-                            if(len(vehicle.path) > 0):
+                            if(len(new_vehicle.path) > 0):
                                 self.roads[next_road_index].wieght += 0.3
-                        elif(vehicle.l == 4):  # A car is switching roads
+                        elif(new_vehicle.l == 4):  # A car is switching roads
                             road.wieght -= 0.2
-                            if(len(vehicle.path) > 0):
+                            if(len(new_vehicle.path) > 0):
                                 self.roads[next_road_index].wieght += 0.2
                         else:  # A  motorcycle is switching roads
                             road.wieght -= 0.1
-                            if(len(vehicle.path) > 0):
+                            if(len(new_vehicle.path) > 0):
                                 self.roads[next_road_index].wieght += 0.1
 
                     # vehicle.edgesPath = self.G.indexPathToEdgesPath(vehicle.path)

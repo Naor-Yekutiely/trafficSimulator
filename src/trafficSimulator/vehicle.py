@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.random import randint
 import random
+import uuid
 
 
 class Vehicle:
@@ -46,11 +47,13 @@ class Vehicle:
         self.path = []
         self.edgesPath = []
         self.current_road_index = 0  # TODO: chnege index to next_road obj and use it
+        self.current_road = None
 
         self.x = 0
         self.v = self.v_max
         self.a = 0
         self.stopped = False
+        self.uuid = str(uuid.uuid1())
 
     def __repr__(self):
         return str(self.l)
