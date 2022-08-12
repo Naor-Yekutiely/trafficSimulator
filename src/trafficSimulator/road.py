@@ -33,6 +33,7 @@ class Road:
 
     def is_has_next_road(self, vehicle):
         return vehicle.current_road_index + 1 < len(vehicle.path)
+        # return len(vehicle.path) > 0
 
     def is_next_road_full(self, vehicle, roads):
         next_road = roads[vehicle.path[vehicle.current_road_index + 1]]

@@ -104,6 +104,7 @@ class Simulation:
                 # If vehicle has a next road
                 if len(vehicle.path) > 0:
                     # Update current road to next road
+                    # use next road obj and not index..
                     vehicle.current_road_index += 1
                     if(self.isDTLS):
                         # TODO: imlement DTLS behavior here.
@@ -114,8 +115,10 @@ class Simulation:
                         # check for a better path
                         source = self.G.edgesNodes[road.name][1]
                         target = vehicle.target
-                        old_path = vehicle.path
+                        #old_path = vehicle.path
                         vehicle.path = self.G.getPath(source, target)
+                        vehicle.edgesPath = self.G.indexPathToEdgesPath(
+                            vehicle.path)
                         if(len(vehicle.path) > 0):
                             next_road_index = vehicle.path[0]
                             self.roads[next_road_index].vehicles.append(
