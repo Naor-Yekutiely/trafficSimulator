@@ -44,6 +44,7 @@ class Vehicle:
         self.T = 1  # the reaction time of the i-th vehicle’s driver
 
         self.path = []
+        self.edgesPath = []
         self.current_road_index = 0
 
         self.x = 0

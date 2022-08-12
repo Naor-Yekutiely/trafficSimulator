@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import grammar
 from unittest import case
 from .road import Road
 from .node import Node
@@ -6,11 +7,13 @@ from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
 import os
 import json
+import networkx as nx
 
 
 class Simulation:
-    def __init__(self, config={}):
+    def __init__(self, isDTLS=False, config={}):
         # Set default configuration
+        self.isDTLS = isDTLS
         self.set_default_config()
 
         # Update configuration
@@ -28,6 +31,9 @@ class Simulation:
         self.traffic_signals = []
         self.vehicleCount = 0
         self.road_one_tp = 0
+
+    def setGraph(self, Graph):
+        self.G = Graph
 
     def create_road(self, start, end, name, wieght):
         road = Road(start, end, name, wieght)
@@ -68,9 +74,9 @@ class Simulation:
     def update(self):
         # Update every road
         for index, road in enumerate(self.roads):
-            #next_road = None
+            # next_road = None
             # if(index + 1 < len(self.roads)):
-            #next_road = self.roads[index+1]
+            # next_road = self.roads[index+1]
             road.update(self.dt, self.roads)
             # if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
             #     print("a")
@@ -93,33 +99,46 @@ class Simulation:
                 continue
             # If not
             vehicle = road.vehicles[0]
-            # If first vehicle is out of road bounds
+            # If first vehicle is out of road bounds and still not reached end of the path
             if vehicle.x >= road.length:
                 # If vehicle has a next road
-                if vehicle.current_road_index + 1 < len(vehicle.path):
+                if len(vehicle.path) > 0:
                     # Update current road to next road
                     vehicle.current_road_index += 1
-                    # dicrease leaving roads wieght and increase added roads wieght
-                    # TODO: Why sum roads get to negative wieghts?
-                    if(vehicle.l == 8):  # A bus is switching roads
-                        self.roads[vehicle.current_road_index-1].wieght -= 0.3
-                        self.roads[vehicle.current_road_index].wieght += 0.3
-                    elif(vehicle.l == 4):  # A car is switching roads
-                        self.roads[vehicle.current_road_index-1].wieght -= 0.2
-                        self.roads[vehicle.current_road_index].wieght += 0.2
-                    else:  # A  motorcycle is switching roads
-                        self.roads[vehicle.current_road_index-1].wieght -= 0.1
-                        self.roads[vehicle.current_road_index].wieght += 0.1
-                    # Create a copy and reset some vehicle properties
-                    new_vehicle = deepcopy(vehicle)
-                    new_vehicle.x = 0
-                    # Add it to the next road
-                    next_road_index = vehicle.path[vehicle.current_road_index]
-                    self.roads[next_road_index].vehicles.append(new_vehicle)
-                else:
+                    if(self.isDTLS):
+                        # TODO: imlement DTLS behavior here.
+                        tmp = 0
+                    else:
+                        new_vehicle = deepcopy(vehicle)
+                        new_vehicle.x = 0
+                        # check for a better path
+                        source = self.G.edgesNodes[road.name][1]
+                        target = vehicle.target
+                        old_path = vehicle.path
+                        vehicle.path = self.G.getPath(source, target)
+                        if(len(vehicle.path) > 0):
+                            next_road_index = vehicle.path[0]
+                            self.roads[next_road_index].vehicles.append(
+                                new_vehicle)
+                        # decrese the leaving road weight and increasse comming road wieght.
+                        if(vehicle.l == 8):  # A bus is switching roads
+                            road.wieght -= 0.3
+                            if(len(vehicle.path) > 0):
+                                self.roads[next_road_index].wieght += 0.3
+                        elif(vehicle.l == 4):  # A car is switching roads
+                            road.wieght -= 0.2
+                            if(len(vehicle.path) > 0):
+                                self.roads[next_road_index].wieght += 0.2
+                        else:  # A  motorcycle is switching roads
+                            road.wieght -= 0.1
+                            if(len(vehicle.path) > 0):
+                                self.roads[next_road_index].wieght += 0.1
+
+                    # vehicle.edgesPath = self.G.indexPathToEdgesPath(vehicle.path)
+                else:  # Leaving simulation
                     self.vehicleCount -= 1
-                    if(index == 15):
-                        self.road_one_tp += 1
+                    # if(index == 15):
+                    #self.road_one_tp += 1
 
                 # In all cases, remove it from its road
                 road.vehicles.popleft()

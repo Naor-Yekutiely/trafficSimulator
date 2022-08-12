@@ -2,12 +2,13 @@ import numpy as np
 from trafficSimulator import *
 
 
-sim = Simulation()
+sim = Simulation(False)  # isDTLS param..
 G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
 sim.create_nodes(G)
 sim.create_signals(G)
+sim.setGraph(G)
 
 # TODO missing leaf nodes on the right of all rows 1-4.. need another node 17
 sim.create_gen({
