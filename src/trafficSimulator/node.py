@@ -52,7 +52,8 @@ class Node:
                 {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "vertices": tmpVertices})
 
     def update(self):
-        if(self.isDTLS):  # DTLS ROW(Right Of Way)
+        # TODO: Finish imlementation of update node Algorithm here - from DTLS_Design.
+        if(self.isDTLS):
             for node in self.nodes:
                 nearst_vehicles = []
                 for road in node["incomming_roads"]:

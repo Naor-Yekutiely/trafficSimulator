@@ -1,6 +1,5 @@
 from trafficSimulator import *
 
-
 sim = Simulation(False)  # isDTLS param..
 G = Graph()
 

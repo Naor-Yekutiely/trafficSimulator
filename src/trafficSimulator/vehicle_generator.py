@@ -1,7 +1,7 @@
 from .vehicle import Vehicle
 from numpy.random import randint
 from collections import deque
-import time
+#import time
 
 
 class VehicleGenerator:

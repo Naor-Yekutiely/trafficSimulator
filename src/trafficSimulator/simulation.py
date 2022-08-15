@@ -1,5 +1,5 @@
-from lib2to3.pgen2 import grammar
-from unittest import case
+#from lib2to3.pgen2 import grammar
+#from unittest import case
 from .road import Road
 from .node import Node
 from copy import deepcopy
@@ -7,7 +7,7 @@ from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
 import os
 import json
-import networkx as nx
+#import networkx as nx
 
 
 class Simulation:
@@ -107,7 +107,7 @@ class Simulation:
                     # use next road obj and not index..
                     vehicle.current_road_index += 1
                     if(self.isDTLS):
-                        # TODO: imlement DTLS behavior here.
+                        # TODO: imlement DTLS road flip here - option_2 in DTLS_Design.
                         tmp = 0
                     else:
                         # if(vehicle.uuid == 'naor_yap'): This is good to track a spisific vehicle
