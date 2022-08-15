@@ -69,7 +69,7 @@ class Simulation:
             self.create_signal([group_1, group_2], signal['cycle_length'])
 
     def create_nodes(self, graph):
-        self.nodes = Node(self.roadsDic, graph)
+        self.nodes = Node(self.roadsDic, graph, self.isDTLS)
 
     def update(self):
         # Update every road

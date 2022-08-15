@@ -1,18 +1,19 @@
-from operator import index
-from scipy.spatial import distance
-from collections import deque
+#from operator import index
+#from scipy.spatial import distance
+#from collections import deque
 import os
 import json
-from trafficSimulator.graph import Graph
+#from trafficSimulator.graph import Graph
 
-from trafficSimulator.vehicle import Vehicle
+#from trafficSimulator.vehicle import Vehicle
 
 
 class Node:
-    def __init__(self, roadsDic, graph):
+    def __init__(self, roadsDic, graph, isDTLS=False):
         self.nodes = []
         self.roadsDic = roadsDic
         self.G = graph
+        self.isDTLS = isDTLS
         self.initNodes()
 
     def initNodes(self):
@@ -50,8 +51,8 @@ class Node:
             self.nodes.append(
                 {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "vertices": tmpVertices})
 
-    def update(self, isDTLS=False):
-        if(isDTLS):  # DTLS ROW(Right Of Way)
+    def update(self):
+        if(self.isDTLS):  # DTLS ROW(Right Of Way)
             for node in self.nodes:
                 nearst_vehicles = []
                 for road in node["incomming_roads"]:
