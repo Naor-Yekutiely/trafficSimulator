@@ -1,0 +1,73 @@
+{
+    "phats": [{
+            "source": "V_1_6_U",
+            "target": "V_1_2_U",
+            "rate": 100
+        },
+        {
+            "source": "V_0_4_D",
+            "target": "V_2_4_U",
+            "rate": 50
+        },
+        {
+            "source": "V_1_0_D",
+            "target": "V_1_7_D",
+            "rate": 90
+        },
+        {
+            "source": "V_2_1_U",
+            "target": "V_0_6_U",
+            "rate": 30
+        },
+        {
+            "source": "V_0_0_D",
+            "target": "V_1_5_D",
+            "rate": 95
+        },
+        {
+            "source": "V_3_0_U",
+            "target": "V_3_17_U",
+            "rate": 100
+        },
+        {
+            "source": "V_1_17_U",
+            "target": "V_2_0_D",
+            "rate": 75
+        },
+        {
+            "source": "V_1_0_D",
+            "target": "V_3_16_D",
+            "rate": 35
+        },
+        {
+            "source": "V_5_15_U",
+            "target": "V_0_11_D",
+            "rate": 87
+        },
+        {
+            "source": "V_0_9_D",
+            "target": "V_5_8_U",
+            "rate": 100
+        },
+        {
+            "source": "V_4_0_D",
+            "target": "V_0_10_D",
+            "rate": 120
+        },
+        {
+            "source": "V_1_16_D",
+            "target": "V_5_12_U",
+            "rate": 75
+        },
+        {
+            "source": "V_4_17_D",
+            "target": "V_1_7_U",
+            "rate": 35
+        },
+        {
+            "source": "V_0_2_U",
+            "target": "V_5_8_U",
+            "rate": 87
+        }
+    ]
+}
