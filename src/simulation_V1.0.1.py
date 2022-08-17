@@ -1,19 +1,19 @@
 from trafficSimulator import *
 import subprocess
 
-wd = os.getcwd()
-docker_path = f"{wd}/infrastructure"
-os.chdir(docker_path)
-subprocess.run(['docker-compose', 'up', '-d'], check=True)
-os.chdir(wd)
-# subprocess.call("pwd")
-
-sim = Simulation(False)  # isDTLS param..
+# wd = os.getcwd()
+# docker_path = f"{wd}/infrastructure"
+# os.chdir(docker_path)
+# subprocess.run(['docker-compose', 'up', '-d'], check=True)
+# os.chdir(wd)
+isDTLS = True
+sim = Simulation(isDTLS)  # isDTLS param..
 G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
 sim.create_nodes(G)
-sim.create_signals(G)
+if(not(isDTLS)):
+    sim.create_signals(G)
 sim.setGraph(G)
 
 f = open(f"{os.getcwd()}/src/trafficSimulator/Simulation_Config.json")

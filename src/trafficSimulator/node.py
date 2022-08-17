@@ -1,8 +1,11 @@
 #from operator import index
 #from scipy.spatial import distance
 #from collections import deque
+from cmath import inf
 import os
 import json
+import numpy as np
+from copy import deepcopy
 #from trafficSimulator.graph import Graph
 
 #from trafficSimulator.vehicle import Vehicle
@@ -49,22 +52,24 @@ class Node:
                 tmpVertices.append(v)
             #self.nodes.append({"roads": tmpRoads,"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads })
             self.nodes.append(
-                {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "vertices": tmpVertices})
+                {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "vertices": tmpVertices, "name": node["name"]})
 
     def update(self):
         # TODO: Finish imlementation of update node Algorithm here - from DTLS_Design.
-        if(self.isDTLS):
+        if(self.isDTLS):  # self.isDTLS
             for node in self.nodes:
                 nearst_vehicles = []
+                nearst_vehicles_snap_shot = []
                 for road in node["incomming_roads"]:
-                    tmp_min = 1000  # edge cases??
-                    for vehicle in road["roadobj"].vehicles:
-                        if (abs(vehicle.x - road["roadobj"].length) < tmp_min):
-                            tmp_min = abs(vehicle.x - road["roadobj"].length)
-                            nearst_vehicles.append({
-                                "vehicle": vehicle, "priority": road["priority"]})
+                    if(len(road["roadobj"].vehicles) > 0):
+                        # Add last vehicle from each road in incomming_roads of current node.
+                        # road["roadobj"].vehicles[0] hold the vehicles with max(x) in the current road.
+                        nearst_vehicles.append(
+                            {"vehicle": road["roadobj"].vehicles[0], "priority": road["priority"]})
+                nearst_vehicles_snap_shot = deepcopy(nearst_vehicles)
                 if (len(nearst_vehicles) > 1):
-                    min_priorty = 100  # edge cases??
+                    # Lowest priorty has superiority -> best priorty is 1.
+                    min_priorty = np.inf
                     for v in nearst_vehicles:
                         if(v["priority"] < min_priorty):
                             min_priorty = v["priority"]
@@ -72,39 +77,53 @@ class Node:
                         if(v["priority"] != min_priorty):
                             nearst_vehicles.pop(index)
                     if (len(nearst_vehicles) > 1):
-                        #   Check for conflict
-                        paths = []
+                        # Check for conflict logic:
+                        # A = set of all vertices in all nearset vehicles paths.
+                        # B = set of vertcies of the current node
+                        # C = (A intersection B)
+                        # Conflict exsist only if C is not emptey.
+                        vertices_paths = []
                         for index, v in enumerate(nearst_vehicles):
                             p = set()
-                            for edgeIndex in nearst_vehicles[index]['vehicle'].path:
-                                edgeName = self.G.edgeToIndex[edgeIndex]
-                                for n in self.G.edgesNodes[edgeName]:
-                                    p.add(n)
-                            paths.append(p)
-                        paths.append(set(node["vertices"]))
-                        union = set.intersection(*paths)
+                            for edge in nearst_vehicles[index]['vehicle'].edgesPath:
+                                p.update(set(self.G.edgesNodes[edge]))
+                            vertices_paths.append(p)
+                        vertices_paths.append(
+                            (set(node["vertices"])))
+                        union = set.intersection(*vertices_paths)
                         if(len(union) == 0):
                             #   No conflict found
-                            return -5
+                            continue
                         else:
                             #    Settale the conflict -> the winner is the one with the min number of edges from the joined conflicted vertex
                             v = union.pop()
-                            distance = []
+                            distance_arr = []
+                            min_distance = np.inf
                             for vehicle in nearst_vehicles:
-                                u = self.G.edgesNodes[self.G.edgeToIndex[vehicle['vehicle']
-                                                                         .path[vehicle['vehicle'].current_road_index]]][0]
-                                distance.append({self.G.edgeToIndex[vehicle['vehicle'].path[vehicle['vehicle'].current_road_index]]: len(
-                                    self.G.getPath(u, v))})
-                            #    if the distance is the same then go be position -> The winner is the one closest to the node
-
+                                current_road = vehicle['vehicle'].current_road.name
+                                u = self.G.edgesNodes[current_road][0]
+                                current_distance = len(self.G.getPath(u, v))
+                                if(current_distance <= min_distance):
+                                    min_distance = current_distance
+                                    distance_arr.append(
+                                        {vehicle['vehicle'].uuid: min_distance})
+                            min_distance = np.inf
+                            if(len(distance_arr) > 1):
+                                #  distance is the same then go be position -> The winner is the one closest to the node
+                                return -1
+                            else:
+                                #  We have a winner: The winner is the vehicle in distance_arr - use uuid to find it..
+                                return -1
                             # TODO: handle trafficlights...
-                            return -2
                     else:
-                        # Go by priorty
-                        tmp = 2
+                        if(len(nearst_vehicles_snap_shot) > 1):
+                            # Go by Prirty
+                            tmp = 2
+                        else:
+                            continue
                 else:
                     continue
-                    # Only one vehicle in the node..
+                    # Only one vehicle in the node. Let it continue with no interruption.
                 return 0
         else:  # Normal OW(Right Of Way) - Using toggle hidden traffix lights
             # TODO: Handel toggle

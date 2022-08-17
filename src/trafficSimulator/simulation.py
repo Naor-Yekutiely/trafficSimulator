@@ -106,7 +106,7 @@ class Simulation:
                     # Update current road to next road
                     # use next road obj and not index..
                     vehicle.current_road_index += 1
-                    if(self.isDTLS):
+                    if(False):  # TODO: Change it back to self.isDTLS
                         # TODO: imlement DTLS road flip here - option_2 in DTLS_Design.
                         tmp = 0
                     else:
