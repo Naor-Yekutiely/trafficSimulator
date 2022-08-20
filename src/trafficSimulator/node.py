@@ -1,6 +1,6 @@
-#from operator import index
-#from scipy.spatial import distance
-#from collections import deque
+# from operator import index
+# from scipy.spatial import distance
+# from collections import deque
 from cmath import inf
 from dis import dis
 import os
@@ -12,9 +12,9 @@ import time
 from copy import deepcopy
 from scipy.spatial import distance
 from itertools import combinations
-#from trafficSimulator.graph import Graph
+# from trafficSimulator.graph import Graph
 
-#from trafficSimulator.vehicle import Vehicle
+# from trafficSimulator.vehicle import Vehicle
 
 
 class Node:
@@ -45,26 +45,23 @@ class Node:
                 if(node["incomming_roads"][road]["name"] != "none"):
                     tmpIcommingRoads.append({
                         "road": node["incomming_roads"][road]["name"],
-                        "priority": node["incomming_roads"][road]["priority"],
                         "roadobj": self.roadsDic[node["incomming_roads"][road]["name"]]
                     })
             for road in node["outgoing_roads"]:
                 if(node["outgoing_roads"][road]["name"] != "none"):
                     tmpOutgoingRoads.append({
                         "road": node["outgoing_roads"][road]["name"],
-                        "priority": node["outgoing_roads"][road]["priority"],
                         "roadobj": self.roadsDic[node["outgoing_roads"][road]["name"]]
                     })
             for road in node["inner_roads"]:
                 if(node["inner_roads"][road]["name"] != "none"):
                     tmpInnerRoads.append({
                         "road": node["inner_roads"][road]["name"],
-                        "priority": node["inner_roads"][road]["priority"],
                         "roadobj": self.roadsDic[node["inner_roads"][road]["name"]]
                     })
             for v in node["vertices"]:
                 tmpVertices.append(v)
-            #self.nodes.append({"roads": tmpRoads,"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads })
+            # self.nodes.append({"roads": tmpRoads,"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads })
             self.nodes.append(
                 {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "inner_roads": tmpInnerRoads, "vertices": tmpVertices, "name": node["name"]})
 
@@ -91,7 +88,7 @@ class Node:
         chosen_collision_vehicles = None
         collision = None
         min_dist = np.inf
-        dist_factor = 25
+        dist_factor = 15
         for comb in possible_collisions:
             dist = distance.euclidean(
                 comb[0].position, comb[1].position)
@@ -180,6 +177,26 @@ class Node:
 
         return None, None
 
+    def checkWinnerDeuToRoadTransfer(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        dist_transaction_factor = 6
+        distance_A = collision_vehicle_A['vehicle'].current_road.length - \
+            collision_vehicle_A['vehicle'].x
+        distance_B = collision_vehicle_B['vehicle'].current_road.length - \
+            collision_vehicle_B['vehicle'].x
+        if(distance_A < distance_B):
+            if(distance_A < dist_transaction_factor):
+                winner_vehicle = collision_vehicle_A['vehicle']
+                losser_vehicle = collision_vehicle_B['vehicle']
+                return winner_vehicle, losser_vehicle
+        elif(distance_B < dist_transaction_factor):
+            winner_vehicle = collision_vehicle_B['vehicle']
+            losser_vehicle = collision_vehicle_A['vehicle']
+            return winner_vehicle, losser_vehicle
+
+        return None, None
+
     def checkWinnerDeuToTrafficDensity(self, collision_vehicle_A, collision_vehicle_B):
         winner_vehicle = None
         losser_vehicle = None
@@ -214,17 +231,24 @@ class Node:
             losser_vehicle = collision_vehicle_A['vehicle']
             return winner_vehicle, losser_vehicle
 
-    def getWinnerAndLosser(self, collision):
+    def getWinnerAndLosser(self, collision, node):
         # Algorithm:
-        # 1. Winner by vehicle inside a inner road
+        # 1. Winner by transaction:
+        # 1.1. Winner by Inner Road
+        # 1.2. Winner by Road Transfer
         # 2. Winner by TTL
         # 3. Winner by traffic density in the road
-        # 4. Winner by road priorty - TODO: missing
+        # 4. Winner by road priorty - TODO: Missing - but we have priority for each road now inside the road object
         # 5. Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
         collision_vehicle_A, collision_vehicle_B = collision
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToInnerRoad(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to Inner Road
+            return winner_vehicle, losser_vehicle
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToRoadTransfer(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):
             # Found winner due to Inner Road
@@ -255,7 +279,8 @@ class Node:
         if(self.isDTLS):  # self.isDTLS
             # new code..
             for node in self.nodes:
-                nearst_vehicles = self.getNearstVehicles(node)
+                nearst_vehicles = self.getNearstVehicles(
+                    node)
                 if (len(nearst_vehicles) > 1):
                     collision = self.getChosenCollision(
                         node, nearst_vehicles)
@@ -264,7 +289,7 @@ class Node:
                         continue
                     else:
                         winner_vehicle, losser_vehicle = self.getWinnerAndLosser(
-                            collision)
+                            collision, node)
                         losser_vehicle.waitTime = time.perf_counter()
                         winner_vehicle.waitTime = None
                         signal = losser_vehicle.current_road.traffic_signal

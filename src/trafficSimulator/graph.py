@@ -19,7 +19,7 @@ class Graph:
             self.G.add_node(node["name"], coordinates=node["coordinates"])
         for edge in self.graphData["edges"]:
             self.G.add_edge(edge["nodes"][0], edge["nodes"]
-                            [1], name=edge["name"], weight=edge["weight"], nodes=edge["nodes"])
+                            [1], name=edge["name"], weight=edge["weight"], nodes=edge["nodes"], priority=edge["priority"])
 
     def printEdges(self):
         for e in self.G.edges:
@@ -33,7 +33,7 @@ class Graph:
             self.edgesNodes[self.G.get_edge_data(e[0], e[1])["name"]] = [
                 e[0], e[1]]
             edgesTuples.append(((self.G.nodes.get(e[0])["coordinates"]["x"], self.G.nodes.get(e[0])[
-                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"], self.G.get_edge_data(e[0], e[1])['weight']))
+                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"], self.G.get_edge_data(e[0], e[1])['weight'], self.G.get_edge_data(e[0], e[1])['priority']))
         return edgesTuples
 
     def getPath(self, source, target):

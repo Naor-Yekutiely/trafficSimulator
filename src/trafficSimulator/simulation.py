@@ -35,8 +35,8 @@ class Simulation:
     def setGraph(self, Graph):
         self.G = Graph
 
-    def create_road(self, start, end, name, wieght):
-        road = Road(start, end, name, wieght)
+    def create_road(self, start, end, name, wieght, priority):
+        road = Road(start, end, name, wieght, priority)
         self.roads.append(road)
         self.roadsDic[name] = road
         return road
