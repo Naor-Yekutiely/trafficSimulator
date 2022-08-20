@@ -49,6 +49,7 @@ class Vehicle:
         self.edgesPath = []
         self.current_road_index = 0  # TODO: chnege index to next_road obj and use it
         self.current_road = None
+        self.waitTime = None
 
         self.x = 0
         self.v = self.v_max

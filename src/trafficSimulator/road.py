@@ -8,6 +8,7 @@ class Road:
         self.end = end
         self.name = name
         self.wieght = wieght
+        self.INITIAL_WIEGHT = wieght
         self.isInner = False
         if(self.wieght == 0):
             self.isInner = True

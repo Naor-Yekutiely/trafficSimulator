@@ -8,6 +8,7 @@ import json
 from tkinter import N
 import numpy as np
 import math
+import time
 from copy import deepcopy
 from scipy.spatial import distance
 from itertools import combinations
@@ -25,7 +26,7 @@ class Node:
         self.initNodes()
 
     def initNodes(self):
-        f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data_New.json")
+        f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data.json")
         self.nodeData = json.load(f)
         for node in self.nodeData["nodes"]:
             # tmpRoads = []
@@ -90,10 +91,11 @@ class Node:
         chosen_collision_vehicles = None
         collision = None
         min_dist = np.inf
+        dist_factor = 25
         for comb in possible_collisions:
             dist = distance.euclidean(
                 comb[0].position, comb[1].position)
-            if(dist < 20 and dist < min_dist):
+            if(dist < dist_factor and dist < min_dist):
                 min_dist = dist
                 chosen_collision_vehicles = comb
         if(chosen_collision_vehicles != None):
@@ -130,18 +132,120 @@ class Node:
         union = set.intersection(*vertices_paths)
         return len(union) == 0  # True here means that no conflict found
 
+    def checkWinnerDeuToTTLTimeOut(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        Vehicle_A = collision_vehicle_A['vehicle']
+        Vehicle_B = collision_vehicle_B['vehicle']
+        current_time = time.perf_counter()
+        # set a ttl for evrey road and use it..
+        TTL_factor = 7  # Max time we allow for a vechile to wait. - in seconds
+        if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
+            if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) and (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
+                if(current_time - Vehicle_A.waitTime > current_time - Vehicle_B.waitTime):
+                    winner_vehicle = Vehicle_A
+                    losser_vehicle = Vehicle_B
+                    return Vehicle_A, Vehicle_B
+                else:
+                    winner_vehicle = Vehicle_B
+                    losser_vehicle = Vehicle_A
+                    return winner_vehicle, losser_vehicle
+            elif(Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor):
+                winner_vehicle = Vehicle_A
+                losser_vehicle = Vehicle_B
+                return winner_vehicle, losser_vehicle
+            else:
+                winner_vehicle = Vehicle_B
+                losser_vehicle = Vehicle_A
+                return winner_vehicle, losser_vehicle
+
+        return None, None
+
+    def checkWinnerDeuToInnerRoad(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        if(collision_vehicle_A['vehicle'].current_road.isInner and collision_vehicle_B['vehicle'].current_road.isInner):
+            raise Exception("Two vehicles on inner roads.")
+        if(collision_vehicle_A['vehicle'].current_road.isInner or collision_vehicle_B['vehicle'].current_road.isInner):
+            if(collision_vehicle_A['vehicle'].current_road.isInner):
+                # Found winner due to inner road
+                winner_vehicle = collision_vehicle_A['vehicle']
+                losser_vehicle = collision_vehicle_B['vehicle']
+                return winner_vehicle, losser_vehicle
+            else:
+                # Found winner due to inner road
+                winner_vehicle = collision_vehicle_B['vehicle']
+                losser_vehicle = collision_vehicle_A['vehicle']
+                return winner_vehicle, losser_vehicle
+
+        return None, None
+
+    def checkWinnerDeuToTrafficDensity(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        collision_vehicle_A_road_traffic_density = collision_vehicle_A[
+            'vehicle'].current_road.wieght - collision_vehicle_A['vehicle'].current_road.INITIAL_WIEGHT
+        collision_vehicle_B_road_traffic_density = collision_vehicle_B[
+            'vehicle'].current_road.wieght - collision_vehicle_B['vehicle'].current_road.INITIAL_WIEGHT
+        density_factor = 0.5
+        if(collision_vehicle_A_road_traffic_density != collision_vehicle_B_road_traffic_density and
+                abs(collision_vehicle_A_road_traffic_density - collision_vehicle_B_road_traffic_density) > density_factor):
+            # Found winner due to traffic_density
+            if(collision_vehicle_A_road_traffic_density > collision_vehicle_B_road_traffic_density):
+                winner_vehicle = collision_vehicle_A['vehicle']
+                losser_vehicle = collision_vehicle_B['vehicle']
+                return winner_vehicle, losser_vehicle
+            else:
+                winner_vehicle = collision_vehicle_B['vehicle']
+                losser_vehicle = collision_vehicle_A['vehicle']
+                return winner_vehicle, losser_vehicle
+
+        return None, None
+
+    def checkWinnerDeuToProximity(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        if(collision_vehicle_A['distance'] < collision_vehicle_B['distance']):
+            winner_vehicle = collision_vehicle_A['vehicle']
+            losser_vehicle = collision_vehicle_B['vehicle']
+            return winner_vehicle, losser_vehicle
+        else:
+            winner_vehicle = collision_vehicle_B['vehicle']
+            losser_vehicle = collision_vehicle_A['vehicle']
+            return winner_vehicle, losser_vehicle
+
     def getWinnerAndLosser(self, collision):
+        # Algorithm:
+        # 1. Winner by vehicle inside a inner road
+        # 2. Winner by TTL
+        # 3. Winner by traffic density in the road
+        # 4. Winner by road priorty - TODO: missing
+        # 5. Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
         collision_vehicle_A, collision_vehicle_B = collision
-        if(collision_vehicle_A['vehicle'].current_road.isInner and collision_vehicle_B['vehicle'].current_road.isInner):
-            raise Exception("Two vehicles on inner roads.")
-        if(collision_vehicle_A['vehicle'].current_road.isInner or collision_vehicle_A['distance'] < collision_vehicle_B['distance']):
-            winner_vehicle = collision_vehicle_A['vehicle']
-            losser_vehicle = collision_vehicle_B['vehicle']
-        elif(collision_vehicle_B['vehicle'].current_road.isInner or collision_vehicle_B['distance'] < collision_vehicle_A['distance']):
-            winner_vehicle = collision_vehicle_B['vehicle']
-            losser_vehicle = collision_vehicle_A['vehicle']
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToInnerRoad(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to Inner Road
+            return winner_vehicle, losser_vehicle
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToTTLTimeOut(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to timeout of TTL
+            return winner_vehicle, losser_vehicle
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToTrafficDensity(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to Traffic Density
+            return winner_vehicle, losser_vehicle
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToProximity(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to Proximity to the conflict Node
+            return winner_vehicle, losser_vehicle
+
+        # Make sure a winner was found
         if(winner_vehicle == None or losser_vehicle == None):
             raise Exception("No winner was found!")
         return winner_vehicle, losser_vehicle
@@ -153,7 +257,6 @@ class Node:
             for node in self.nodes:
                 nearst_vehicles = self.getNearstVehicles(node)
                 if (len(nearst_vehicles) > 1):
-                    #confirmed_collisions = []
                     collision = self.getChosenCollision(
                         node, nearst_vehicles)
                     if(collision == None):
@@ -162,6 +265,8 @@ class Node:
                     else:
                         winner_vehicle, losser_vehicle = self.getWinnerAndLosser(
                             collision)
+                        losser_vehicle.waitTime = time.perf_counter()
+                        winner_vehicle.waitTime = None
                         signal = losser_vehicle.current_road.traffic_signal
                         losser_vehicle.current_road.traffic_signal.current_cycle_index = 1
                         distance_from_node = losser_vehicle.current_road.length - \
@@ -171,170 +276,6 @@ class Node:
                         elif(distance_from_node <= signal.slow_distance):
                             losser_vehicle.slow(
                                 signal.slow_factor*losser_vehicle._v_max)
-
-                        # if(collision_vehicle_A.current_road.isInner or collision_vehicle_A['distance'] < collision_vehicle_B['distance']):
-                        #     winner_vehicle = collision_vehicle_A
-                        #     signal = collision_vehicle_B.current_road.traffic_signal
-                        #     collision_vehicle_B.current_road.traffic_signal.current_cycle_index = 1
-                        #     distance_from_node = collision_vehicle_B.current_road.length - \
-                        #         collision_vehicle_B.x
-                        #     if(distance_from_node <= signal.stop_distance):
-                        #         collision_vehicle_B.stop()
-                        #     elif(distance_from_node <= signal.slow_distance):
-                        #         collision_vehicle_B.slow(
-                        #             signal.slow_factor*collision_vehicle_A._v_max)
-                        # elif(collision_vehicle_B.current_road.isInner or collision_vehicle_B['distance'] < collision_vehicle_A['distance']):
-                        #     winner_vehicle = collision_vehicle_B
-                        #     signal = collision_vehicle_A.current_road.traffic_signal
-                        #     collision_vehicle_A.current_road.traffic_signal.current_cycle_index = 1
-                        #     distance_from_node = collision_vehicle_A.current_road.length - \
-                        #         collision_vehicle_A.x
-                        #     if(distance_from_node <= signal.stop_distance):
-                        #         collision_vehicle_A.stop()
-                        #     elif(distance_from_node <= signal.slow_distance):
-                        #         collision_vehicle_A.slow(
-                        #             signal.slow_factor*collision_vehicle_A._v_max)
-
-                        # if(len(confirmed_collisions) > 2):
-                        #     tmp = 4  # this is hard issue..
-                        # for collision in confirmed_collisions:
-                        #     if(collision[0].current_road.isInner or collision[1].current_road.isInner):
-                        #         if(collision[0].current_road.isInner and collision[1].current_road.isInner):
-                        #             raise Exception("Two vehicles on inner roads.")
-                        #         elif(collision[0].current_road.isInner):
-                        #             winner_vehicle = collision[0]
-                        #             signal = collision[1].current_road.traffic_signal
-                        #             collision[1].current_road.traffic_signal.current_cycle_index = 1
-                        #             distance_from_node = collision[1].current_road.length - \
-                        #                 collision[1].x
-                        #             if(distance_from_node <= signal.stop_distance):
-                        #                 collision[1].stop()
-                        #             elif(distance_from_node <= signal.slow_distance):
-                        #                 collision[1].slow(
-                        #                     signal.slow_factor*collision[0]._v_max)
-                        #         elif(collision[1].current_road.isInner):
-                        #             winner_vehicle = collision[1]
-                        #             signal = collision[0].current_road.traffic_signal
-                        #             collision[0].current_road.traffic_signal.current_cycle_index = 1
-                        #             distance_from_node = collision[0].current_road.length - \
-                        #                 collision[0].x
-                        #             if(distance_from_node <= signal.stop_distance):
-                        #                 collision[0].stop()
-                        #             elif(distance_from_node <= signal.slow_distance):
-                        #                 collision[0].slow(
-                        #                     signal.slow_factor*collision[0]._v_max)
-                        # else:
-
-                        # old code..
-                        # for node in self.nodes:
-                        #     nearst_vehicles = []
-                        #     nearst_vehicles_snap_shot = []
-                        #     winner_vehicle = None
-                        #     conflict_settlement = None
-                        #     for road in node["incomming_roads"]:
-                        #         if(len(road["roadobj"].vehicles) > 0):
-                        #             # Add last vehicle from each road in incomming_roads of current node.
-                        #             # road["roadobj"].vehicles[0] hold the vehicles with max(x) in the current road.
-                        #             nearst_vehicles.append(
-                        #                 {"vehicle": road["roadobj"].vehicles[0], "priority": road["priority"]})
-                        #     nearst_vehicles_snap_shot = deepcopy(nearst_vehicles)
-                        #     if (len(nearst_vehicles) > 1):
-                        #         # Lowest priorty has superiority -> best priorty is 1.
-                        #         min_priorty = np.inf
-                        #         for v in nearst_vehicles:
-                        #             if(v["priority"] < min_priorty):
-                        #                 min_priorty = v["priority"]
-                        #         for index, v in enumerate(nearst_vehicles):
-                        #             if(v["priority"] != min_priorty):
-                        #                 nearst_vehicles.pop(index)
-                        #         if (len(nearst_vehicles) > 1):
-                        #             # Check for conflict logic:
-                        #             # A = set of all vertices in all nearset vehicles paths.
-                        #             # B = set of vertcies of the current node
-                        #             # C = (A intersection B)
-                        #             # Conflict exsist only if C is not emptey.
-                        #             vertices_paths = []
-                        #             for index, v in enumerate(nearst_vehicles):
-                        #                 p = set()
-                        #                 for edge in nearst_vehicles[index]['vehicle'].edgesPath:
-                        #                     p.update(set(self.G.edgesNodes[edge]))
-                        #                 vertices_paths.append(p)
-                        #             if(len(vertices_paths) > 2):
-                        #                 # pontially more then one conflict.. could be at most nCr(len(vertices_paths),2)
-                        #                 raise Exception(
-                        #                     "More then one conflict we don't expect this to ever happen beacuse we user priorty")
-                        #             vertices_paths.append(
-                        #                 (set(node["vertices"])))
-                        #             union = set.intersection(*vertices_paths)
-                        #             if(len(union) == 0):
-                        #                 #   No conflict found
-                        #                 continue
-                        #             else:
-                        #                 #    Settale the conflict -> the winner is the one with the min number of edges from the joined conflicted vertex
-                        #                 if(len(union) > 1):
-                        #                     # More then one conflict node?? we don't expect this to ever happen.
-                        #                     raise Exception(
-                        #                         "More then one conflict node?? we don't expect this to ever happen")
-                        #                 v = union.pop()  # The conflict node.
-                        #                 distance_arr = []  # distance of the i'th vehicle is the number of edges from his node location to the conflict node
-                        #                 min_distance = np.inf
-                        #                 for vehicle in nearst_vehicles:
-                        #                     current_road = vehicle['vehicle'].current_road.name
-                        #                     # The current vehicle node location
-                        #                     u = self.G.edgesNodes[current_road][0]
-                        #                     current_distance = len(self.G.getPath(u, v))
-                        #                     if(current_distance < min_distance):
-                        #                         min_distance = current_distance
-                        #                         if(len(distance_arr) != 0):
-                        #                             distance_arr.clear()
-                        #                         # distance_arr.append(
-                        #                         #     {"vehicleobj": vehicle['vehicle'], "distance": min_distance})
-                        #                         distance_arr.append(vehicle['vehicle'])
-                        #                     elif(current_distance == min_distance):
-                        #                         distance_arr.append(vehicle['vehicle'])
-                        #                         # distance_arr.append(
-                        #                         #     {"vehicleobj": vehicle['vehicle'], "distance": min_distance})
-                        #                 if(len(distance_arr) > 1):
-                        #                     #  distance is the same then go be position -> The winner is the one closest to the node
-                        #                     min_distance = np.inf
-                        #                     winner_index = -1
-                        #                     for index, vehicle in enumerate(distance_arr):
-                        #                         current_distance = vehicle.current_road.length - vehicle.x
-                        #                         if(current_distance < min_distance):
-                        #                             winner_index = index
-                        #                     winner_vehicle = distance_arr[winner_index]
-                        #                     conflict_settlement = "settlement Done by position distance"
-                        #                 else:
-                        #                     #  We have a winner: The winner is the vehicle in distance_arr - use uuid to find it..
-                        #                     if(len(distance_arr) > 1):
-                        #                         raise Exception(
-                        #                             "distance_arr len is grater then 1! Can't decied on a winner")
-                        #                     winner_vehicle = distance_arr.pop()
-                        #                     conflict_settlement = "settlement Done by path distance from the conflict node."
-                        #                 # we have a winner!! - > winner_vehicle holds it..
-                        #                 # TODO: handle trafficlights...
-                        #         else:
-                        #             if(len(nearst_vehicles) != 1):
-                        #                 raise Exception(
-                        #                     "len(nearst_vehicles) should be 1! Can't decied on a winner")
-                        #             else:
-                        #                 winner_vehicle = nearst_vehicles.pop()['vehicle']
-                        #                 conflict_settlement = "settlement Done by priorty."
-                        #                 tmp = 8
-                        #                 continue
-                        #     else:
-                        #         # zero or one vehicle in the node. Let it continue with no interruption.
-                        #         if(len(nearst_vehicles) == 0):
-                        #             continue
-                        #         else:
-                        #             # there was no coflict only zero or one vehicle.
-                        #             winner_vehicle = nearst_vehicles.pop()['vehicle']
-                        #             tmp = 8
-                        #             continue
-                        #     return 0
-                        # if(winner_vehicle != None and conflict_settlement != None):
-                        #     print(
-                        #         f"winner uuid is: {winner_vehicle.uuid}, settlement method: {conflict_settlement}")
         else:
             # TODO: take no action here??
             tmp = 1
