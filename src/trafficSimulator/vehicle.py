@@ -1,3 +1,4 @@
+from tracemalloc import start
 import numpy as np
 from numpy.random import randint
 import random
@@ -54,6 +55,7 @@ class Vehicle:
         self.a = 0
         self.stopped = False
         self.uuid = str(uuid.uuid1())
+        self.position = None
 
     def __repr__(self):
         return str(self.l)
@@ -87,6 +89,9 @@ class Vehicle:
         if self.stopped:
             self.a = -self.b_max*self.v/self.v_max
             self.v = 0
+
+        self.position = (
+            self.current_road.start[0] + self.current_road.angle_cos * self.x, self.current_road.start[1] + self.current_road.angle_sin * self.x)
 
     def stop(self):
         self.stopped = True

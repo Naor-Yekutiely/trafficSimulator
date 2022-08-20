@@ -57,16 +57,21 @@ class Simulation:
         return sig
 
     def create_signals(self, graph):
-        f = open(f"{os.getcwd()}/src/trafficSimulator/Signals_Data.json")
-        self.signals_data = json.load(f)
-        for signal in self.signals_data["signals"]:
-            group_1 = []
-            group_2 = []
-            for road in signal['group_1']:
-                group_1.append(graph.getEdgeIndex(road))
-            for road in signal['group_2']:
-                group_2.append(graph.getEdgeIndex(road))
-            self.create_signal([group_1, group_2], signal['cycle_length'])
+        if(self.isDTLS):
+            for road in self.roads:
+                sig = TrafficSignal([[], [road]], 0)
+                self.traffic_signals.append(sig)
+        else:
+            f = open(f"{os.getcwd()}/src/trafficSimulator/Signals_Data.json")
+            self.signals_data = json.load(f)
+            for signal in self.signals_data["signals"]:
+                group_1 = []
+                group_2 = []
+                for road in signal['group_1']:
+                    group_1.append(graph.getEdgeIndex(road))
+                for road in signal['group_2']:
+                    group_2.append(graph.getEdgeIndex(road))
+                self.create_signal([group_1, group_2], signal['cycle_length'])
 
     def create_nodes(self, graph):
         self.nodes = Node(self.roadsDic, graph, self.isDTLS)

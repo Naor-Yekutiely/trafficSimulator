@@ -8,6 +8,9 @@ class Road:
         self.end = end
         self.name = name
         self.wieght = wieght
+        self.isInner = False
+        if(self.wieght == 0):
+            self.isInner = True
         self.vehicles = deque()
 
         self.init_properties()
@@ -53,8 +56,7 @@ class Road:
                 return True
             return False
         else:
-            return False\
-
+            return False
 
     def is_last_vehicle(self, vehicle):
         return vehicle == self.vehicles[0]

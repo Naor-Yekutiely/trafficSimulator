@@ -2,12 +2,12 @@
     "phats": [{
             "source": "V_1_6_U",
             "target": "V_1_2_U",
-            "rate": 100
+            "rate": 180
         },
         {
             "source": "V_0_4_D",
             "target": "V_2_4_U",
-            "rate": 50
+            "rate": 180
         },
         {
             "source": "V_1_0_D",

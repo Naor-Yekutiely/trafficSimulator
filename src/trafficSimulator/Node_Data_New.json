@@ -1,0 +1,46 @@
+{
+    "nodes": [{
+            "name": "V_1_4",
+            "vertices": ["V_1_4_U", "V_1_4_D"],
+            "inner_roads": {
+                "up": {
+                    "name": "E_1_4_U",
+                    "priority": 1
+                },
+                "down": {
+                    "name": "E_1_4_D",
+                    "priority": 1
+                }
+            },
+            "incomming_roads": {
+                "up": {
+                    "name": "E_L_5",
+                    "priority": 2
+                },
+                "right_up": {
+                    "name": "E_37",
+                    "priority": 1
+                },
+                "left_down": {
+                    "name": "E_55",
+                    "priority": 1
+                }
+            },
+            "outgoing_roads": {
+                "right_down": {
+                    "name": "E_54",
+                    "priority": 1
+                },
+                "left_up": {
+                    "name": "E_38",
+                    "priority": 1
+                },
+                "down": {
+                    "name": "E_L_18",
+                    "priority": 2
+                }
+            }
+        }
+
+    ]
+}

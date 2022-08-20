@@ -32,8 +32,12 @@ class TrafficSignal:
 
     def update(self, sim):
         # if(self.toggle):
-            # self.current_cycle_index = int(not self.current_cycle_index)
+        # self.current_cycle_index = int(not self.current_cycle_index)
         # else:
+        if(sim.isDTLS):
+            # Always turn it back to green if thers a need to make it red then node will handle it..
+            self.current_cycle_index = 0
+        else:
             k = (sim.t // self.cycle_length) % 2
             self.current_cycle_index = int(k)
 

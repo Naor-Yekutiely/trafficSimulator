@@ -12,8 +12,7 @@ G = Graph()
 
 sim.create_roads(G.getEdgesTuples())
 sim.create_nodes(G)
-if(not(isDTLS)):
-    sim.create_signals(G)
+sim.create_signals(G)
 sim.setGraph(G)
 
 f = open(f"{os.getcwd()}/src/trafficSimulator/Simulation_Config.json")
