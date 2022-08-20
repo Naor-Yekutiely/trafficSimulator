@@ -197,6 +197,22 @@ class Node:
 
         return None, None
 
+    def checkWinnerDeuToPriority(self, collision_vehicle_A, collision_vehicle_B):
+        winner_vehicle = None
+        losser_vehicle = None
+        if(collision_vehicle_A['vehicle'].current_road.priority ==
+                collision_vehicle_B['vehicle'].current_road.priority):
+            return None, None
+        elif(collision_vehicle_A['vehicle'].current_road.priority <
+             collision_vehicle_B['vehicle'].current_road.priority):
+            winner_vehicle = collision_vehicle_A['vehicle']
+            losser_vehicle = collision_vehicle_B['vehicle']
+            return winner_vehicle, losser_vehicle
+        else:
+            winner_vehicle = collision_vehicle_B['vehicle']
+            losser_vehicle = collision_vehicle_A['vehicle']
+            return winner_vehicle, losser_vehicle
+
     def checkWinnerDeuToTrafficDensity(self, collision_vehicle_A, collision_vehicle_B):
         winner_vehicle = None
         losser_vehicle = None
@@ -238,7 +254,7 @@ class Node:
         # 1.2. Winner by Road Transfer
         # 2. Winner by TTL
         # 3. Winner by traffic density in the road
-        # 4. Winner by road priorty - TODO: Missing - but we have priority for each road now inside the road object
+        # 4. Winner by Road Priorty
         # 5. Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
@@ -259,6 +275,11 @@ class Node:
             # Found winner due to timeout of TTL
             return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToTrafficDensity(
+            collision_vehicle_A, collision_vehicle_B)
+        if(winner_vehicle != None and losser_vehicle != None):
+            # Found winner due to Traffic Density
+            return winner_vehicle, losser_vehicle
+        winner_vehicle, losser_vehicle = self.checkWinnerDeuToPriority(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):
             # Found winner due to Traffic Density
