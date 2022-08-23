@@ -68,6 +68,11 @@
             "source": "V_0_2_U",
             "target": "V_5_8_U",
             "rate": 87
+        },
+        {
+            "source": "V_2_3_U",
+            "target": "V_0_3_U",
+            "rate": 87
         }
     ]
 }

@@ -119,6 +119,7 @@ class Simulation:
                         #     print(f'path: {vehicle.edgesPath}')
                         new_vehicle = deepcopy(vehicle)
                         new_vehicle.x = 0
+                        new_vehicle.waitTime = None
                         # check for a better path
                         source = self.G.edgesNodes[road.name][1]
                         target = vehicle.target

@@ -29,29 +29,14 @@ class Node:
         f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data.json")
         self.nodeData = json.load(f)
         for node in self.nodeData["nodes"]:
-            # tmpRoads = []
             tmpIcommingRoads = []
-            tmpOutgoingRoads = []
             tmpInnerRoads = []
             tmpVertices = []
-            # for road in node["roads"]:
-            #     if(node["roads"][road]["name"] != "none"):
-            #         tmpRoads.append({
-            #             "road": node["roads"][road]["name"],
-            #             "priority": node["roads"][road]["priority"],
-            #             "roadobj": self.roadsDic[node["roads"][road]["name"]]
-            #         })
             for road in node["incomming_roads"]:
                 if(node["incomming_roads"][road]["name"] != "none"):
                     tmpIcommingRoads.append({
                         "road": node["incomming_roads"][road]["name"],
                         "roadobj": self.roadsDic[node["incomming_roads"][road]["name"]]
-                    })
-            for road in node["outgoing_roads"]:
-                if(node["outgoing_roads"][road]["name"] != "none"):
-                    tmpOutgoingRoads.append({
-                        "road": node["outgoing_roads"][road]["name"],
-                        "roadobj": self.roadsDic[node["outgoing_roads"][road]["name"]]
                     })
             for road in node["inner_roads"]:
                 if(node["inner_roads"][road]["name"] != "none"):
@@ -61,9 +46,8 @@ class Node:
                     })
             for v in node["vertices"]:
                 tmpVertices.append(v)
-            # self.nodes.append({"roads": tmpRoads,"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads })
             self.nodes.append(
-                {"incomming_roads": tmpIcommingRoads, "outgoing_roads": tmpOutgoingRoads, "inner_roads": tmpInnerRoads, "vertices": tmpVertices, "name": node["name"]})
+                {"incomming_roads": tmpIcommingRoads, "inner_roads": tmpInnerRoads, "vertices": tmpVertices, "name": node["name"]})
 
     def getNearstVehicles(self, node):
         nearst_vehicles = []
@@ -88,7 +72,7 @@ class Node:
         chosen_collision_vehicles = None
         collision = None
         min_dist = np.inf
-        dist_factor = 15
+        dist_factor = 20
         for comb in possible_collisions:
             dist = distance.euclidean(
                 comb[0].position, comb[1].position)
@@ -129,14 +113,14 @@ class Node:
         union = set.intersection(*vertices_paths)
         return len(union) == 0  # True here means that no conflict found
 
-    def checkWinnerDeuToTTLTimeOut(self, collision_vehicle_A, collision_vehicle_B):
+    def checkWinnerDeuToTTLTimeOut(self, collision_vehicle_A, collision_vehicle_B, current_time):
         winner_vehicle = None
         losser_vehicle = None
         Vehicle_A = collision_vehicle_A['vehicle']
         Vehicle_B = collision_vehicle_B['vehicle']
-        current_time = time.perf_counter()
         # set a ttl for evrey road and use it..
-        TTL_factor = 7  # Max time we allow for a vechile to wait. - in seconds
+        # TODO: TTL dosn't work so good.
+        TTL_factor = 6  # Max time we allow for a vechile to wait. - in seconds
         if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
             if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) and (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
                 if(current_time - Vehicle_A.waitTime > current_time - Vehicle_B.waitTime):
@@ -247,7 +231,7 @@ class Node:
             losser_vehicle = collision_vehicle_A['vehicle']
             return winner_vehicle, losser_vehicle
 
-    def getWinnerAndLosser(self, collision, node):
+    def getWinnerAndLosser(self, collision, node, current_time):
         # Algorithm:
         # 1. Winner by transaction:
         # 1.1. Winner by Inner Road
@@ -270,15 +254,16 @@ class Node:
             # Found winner due to Inner Road
             return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToTTLTimeOut(
-            collision_vehicle_A, collision_vehicle_B)
+            collision_vehicle_A, collision_vehicle_B, current_time)
         if(winner_vehicle != None and losser_vehicle != None):
             # Found winner due to timeout of TTL
             return winner_vehicle, losser_vehicle
-        winner_vehicle, losser_vehicle = self.checkWinnerDeuToTrafficDensity(
-            collision_vehicle_A, collision_vehicle_B)
-        if(winner_vehicle != None and losser_vehicle != None):
-            # Found winner due to Traffic Density
-            return winner_vehicle, losser_vehicle
+        # TODO: checkWinnerDeuToTrafficDensity seems to be bad :(
+        # winner_vehicle, losser_vehicle = self.checkWinnerDeuToTrafficDensity(
+        #     collision_vehicle_A, collision_vehicle_B)
+        # if(winner_vehicle != None and losser_vehicle != None):
+        #     # Found winner due to Traffic Density
+        #     return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToPriority(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):
@@ -299,6 +284,7 @@ class Node:
         # TODO: Finish imlementation of update node Algorithm here - from DTLS_Design.
         if(self.isDTLS):  # self.isDTLS
             # new code..
+            current_time = time.perf_counter()
             for node in self.nodes:
                 nearst_vehicles = self.getNearstVehicles(
                     node)
@@ -310,9 +296,10 @@ class Node:
                         continue
                     else:
                         winner_vehicle, losser_vehicle = self.getWinnerAndLosser(
-                            collision, node)
-                        losser_vehicle.waitTime = time.perf_counter()
-                        winner_vehicle.waitTime = None
+                            collision, node, current_time)
+                        if(losser_vehicle.waitTime == None):
+                            losser_vehicle.waitTime = time.perf_counter()
+                        # winner_vehicle.waitTime = None -> this is now set only when vehicle really leaves the road.
                         signal = losser_vehicle.current_road.traffic_signal
                         losser_vehicle.current_road.traffic_signal.current_cycle_index = 1
                         distance_from_node = losser_vehicle.current_road.length - \
