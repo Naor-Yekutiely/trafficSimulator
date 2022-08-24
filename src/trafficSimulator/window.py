@@ -313,12 +313,14 @@ class Window:
                     for road in signal.roads[i]:
                         a = 0
                         position = (
-                            (1-a)*road.end[0] + a*road.start[0],
-                            (1-a)*road.end[1] + a*road.start[1]
+                            (1-a)*road.end[0] + a *
+                            road.start[0] - 2 * road.angle_cos,
+                            (1-a)*road.end[1] + a *
+                            road.start[1] - 2 * road.angle_sin
                         )
                         self.rotated_box(
                             position,
-                            (1, 3),
+                            (0.8, 3),
                             cos=road.angle_cos, sin=road.angle_sin,
                             color=color)
 

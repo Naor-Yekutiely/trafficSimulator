@@ -6,7 +6,7 @@ import subprocess
 # os.chdir(docker_path)
 # subprocess.run(['docker-compose', 'up', '-d'], check=True)
 # os.chdir(wd)
-isDTLS = True
+isDTLS = False
 sim = Simulation(isDTLS)  # isDTLS param..
 G = Graph()
 

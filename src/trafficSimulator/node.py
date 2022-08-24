@@ -76,7 +76,7 @@ class Node:
         for comb in possible_collisions:
             dist = distance.euclidean(
                 comb[0].position, comb[1].position)
-            if(dist < dist_factor and dist < min_dist):
+            if(dist < dist_factor and dist < min_dist and self.shouldTriggerCollision(comb)):
                 min_dist = dist
                 chosen_collision_vehicles = comb
         if(chosen_collision_vehicles != None):
@@ -95,6 +95,13 @@ class Node:
                 }
             ]
         return collision
+
+    def shouldTriggerCollision(self, collision_vehicles):
+        distance_A = collision_vehicles[0].current_road.length - \
+            collision_vehicles[0].x
+        distance_B = collision_vehicles[1].current_road.length - \
+            collision_vehicles[1].x
+        return distance_A < 12 and distance_B < 12
 
     def verifyCollision(self, node, chosen_collision_vehicles):
         # Check for conflict logic:
@@ -118,11 +125,11 @@ class Node:
         losser_vehicle = None
         Vehicle_A = collision_vehicle_A['vehicle']
         Vehicle_B = collision_vehicle_B['vehicle']
-        # set a ttl for evrey road and use it..
-        # TODO: TTL dosn't work so good.
-        TTL_factor = 6  # Max time we allow for a vechile to wait. - in seconds
-        if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
-            if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor) and (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > TTL_factor)):
+        # TODO: set a ttl for evrey road and use it. This can imlement the prirty of roads.
+        # Max time we allow for a vechile to wait before he preemptively takes the right of way. - in seconds
+        starvation_TTL_factor = 15
+        if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > starvation_TTL_factor)):
+            if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor) and (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > starvation_TTL_factor)):
                 if(current_time - Vehicle_A.waitTime > current_time - Vehicle_B.waitTime):
                     winner_vehicle = Vehicle_A
                     losser_vehicle = Vehicle_B
@@ -131,7 +138,7 @@ class Node:
                     winner_vehicle = Vehicle_B
                     losser_vehicle = Vehicle_A
                     return winner_vehicle, losser_vehicle
-            elif(Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > TTL_factor):
+            elif(Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor):
                 winner_vehicle = Vehicle_A
                 losser_vehicle = Vehicle_B
                 return winner_vehicle, losser_vehicle
@@ -281,9 +288,7 @@ class Node:
         return winner_vehicle, losser_vehicle
 
     def update(self):
-        # TODO: Finish imlementation of update node Algorithm here - from DTLS_Design.
-        if(self.isDTLS):  # self.isDTLS
-            # new code..
+        if(self.isDTLS):  # take no action here if not in DTLS mode
             current_time = time.perf_counter()
             for node in self.nodes:
                 nearst_vehicles = self.getNearstVehicles(
@@ -309,22 +314,3 @@ class Node:
                         elif(distance_from_node <= signal.slow_distance):
                             losser_vehicle.slow(
                                 signal.slow_factor*losser_vehicle._v_max)
-        else:
-            # TODO: take no action here??
-            tmp = 1
-
-    # Upadte Nodes Pseudo Code Algorithm for DTLS:
-
-    # for all nodes:
-    # for all incoming roads:
-    #   find nearest car in evrey node
-    #   find min priorty in cars
-    #   elimnate all cars from priorty array that dosn't equal the min priorty in the priorty array
-    #   if priorty array len > 1:
-    #       if exsist conflict: (if cars have joined vertex that is part of the node)
-    #           settle the conflict:
-    #             the winner is the one with the min number of edges from the joined conflicted vertex
-    #       else:
-    #           continue (do nothing)
-    #   else: (no cars in the node or there is a winning priorty one)
-    #      go by priorty
