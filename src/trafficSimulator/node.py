@@ -26,7 +26,7 @@ class Node:
         self.initNodes()
 
     def initNodes(self):
-        f = open(f"{os.getcwd()}/src/trafficSimulator/Node_Data.json")
+        f = open(f"{os.getcwd()}/src/SimulationConfig/Node_Data.json")
         self.nodeData = json.load(f)
         for node in self.nodeData["nodes"]:
             tmpIcommingRoads = []

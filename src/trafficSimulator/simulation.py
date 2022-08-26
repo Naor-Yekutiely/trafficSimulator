@@ -62,7 +62,7 @@ class Simulation:
                 sig = TrafficSignal([[], [road]], 0)
                 self.traffic_signals.append(sig)
         else:
-            f = open(f"{os.getcwd()}/src/trafficSimulator/Signals_Data.json")
+            f = open(f"{os.getcwd()}/src/SimulationConfig/Signals_Data.json")
             self.signals_data = json.load(f)
             for signal in self.signals_data["signals"]:
                 group_1 = []

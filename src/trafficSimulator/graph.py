@@ -12,7 +12,7 @@ class Graph:
         self.initG()
 
     def initG(self):
-        f = open(f"{os.getcwd()}/src/trafficSimulator/Graph_Data.json")
+        f = open(f"{os.getcwd()}/src/SimulationConfig/Graph_Data.json")
         self.graphData = json.load(f)
         # TODO: Change nodes to vertexs as node will be used as intersactions
         for node in self.graphData["nodes"]:
