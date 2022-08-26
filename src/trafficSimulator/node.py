@@ -244,7 +244,7 @@ class Node:
         # 1.1. Winner by Inner Road
         # 1.2. Winner by Road Transfer
         # 2. Winner by TTL
-        # 3. Winner by traffic density in the road
+        # 3. Winner by traffic density in the road - not in use for now
         # 4. Winner by Road Priorty
         # 5. Winner by proximity to the conflict Node
         winner_vehicle = None
