@@ -29,9 +29,18 @@ class Node:
         for vertex in self.G.vertices:
             tmpIcommingRoads_ = []
             tmpInnerRoads_ = []
-            up_node = vertex['nodes'][0]
-            down_node = vertex['nodes'][1]
-            for node in list(self.G.G.in_edges(up_node)) + list(self.G.G.in_edges(down_node)):
+            isOnluUp = False
+            if(len(vertex['nodes']) == 2):
+                up_node = vertex['nodes'][0]
+                down_node = vertex['nodes'][1]
+                node_list = list(self.G.G.in_edges(up_node)) + \
+                    list(self.G.G.in_edges(down_node))
+            elif(len(vertex['nodes']) == 1):
+                up_node = vertex['nodes'][0]
+                node_list = list(self.G.G.in_edges(up_node))
+            else:
+                raise Exception("nunber of nodes not allowed.")
+            for node in node_list:
                 road_name = self.G.G.get_edge_data(*node)['name']
                 road_obj = self.roadsDic[self.G.G.get_edge_data(*node)['name']]
                 if(road_obj.isInner):
