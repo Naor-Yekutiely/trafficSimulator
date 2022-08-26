@@ -33,17 +33,15 @@ class Node:
             tmpInnerRoads = []
             tmpVertices = []
             for road in node["incomming_roads"]:
-                if(node["incomming_roads"][road]["name"] != "none"):
-                    tmpIcommingRoads.append({
-                        "road": node["incomming_roads"][road]["name"],
-                        "roadobj": self.roadsDic[node["incomming_roads"][road]["name"]]
-                    })
+                tmpIcommingRoads.append({
+                    "road": road['name'],
+                    "roadobj": self.roadsDic[road['name']]
+                })
             for road in node["inner_roads"]:
-                if(node["inner_roads"][road]["name"] != "none"):
-                    tmpInnerRoads.append({
-                        "road": node["inner_roads"][road]["name"],
-                        "roadobj": self.roadsDic[node["inner_roads"][road]["name"]]
-                    })
+                tmpInnerRoads.append({
+                    "road": road['name'],
+                    "roadobj": self.roadsDic[road['name']]
+                })
             for v in node["vertices"]:
                 tmpVertices.append(v)
             self.nodes.append(

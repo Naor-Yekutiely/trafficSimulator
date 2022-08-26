@@ -2,58 +2,54 @@
     "nodes": [{
             "name": "V_1_3",
             "vertices": ["V_1_3_U", "V_1_3_D"],
-            "inner_roads": {
-                "up": {
+            "inner_roads": [{
                     "name": "E_1_3_U",
                     "priority": 1
                 },
-                "down": {
+                {
                     "name": "E_1_3_D",
                     "priority": 1
                 }
-            },
-            "incomming_roads": {
-                "up": {
+            ],
+            "incomming_roads": [{
                     "name": "E_L_17",
                     "priority": 2
                 },
-                "right_up": {
+                {
                     "name": "E_38",
                     "priority": 1
                 },
-                "left_down": {
+                {
                     "name": "E_56",
                     "priority": 1
                 }
-            }
+            ]
         },
         {
             "name": "V_1_4",
             "vertices": ["V_1_4_U", "V_1_4_D"],
-            "inner_roads": {
-                "up": {
+            "inner_roads": [{
                     "name": "E_1_4_U",
                     "priority": 1
                 },
-                "down": {
+                {
                     "name": "E_1_4_D",
                     "priority": 1
                 }
-            },
-            "incomming_roads": {
-                "up": {
+            ],
+            "incomming_roads": [{
                     "name": "E_L_5",
                     "priority": 2
                 },
-                "right_up": {
+                {
                     "name": "E_37",
                     "priority": 1
                 },
-                "left_down": {
+                {
                     "name": "E_55",
                     "priority": 1
                 }
-            }
+            ]
         }
     ]
 }
