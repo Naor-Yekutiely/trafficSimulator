@@ -9,12 +9,16 @@ class Graph:
         self.G = nx.DiGraph()
         self.edgeToIndex = []
         self.edgesNodes = {}
+        self.vertices = []
         self.initG()
 
     def initG(self):
         f = open(f"{os.getcwd()}/src/SimulationConfig/Graph_Data.json")
         self.graphData = json.load(f)
         # TODO: Change nodes to vertexs as node will be used as intersactions
+        for vertex in self.graphData["vertices"]:
+            self.vertices.append(
+                {"name": vertex['name'], "nodes": vertex['nodes']})
         for node in self.graphData["nodes"]:
             self.G.add_node(node["name"], coordinates=node["coordinates"])
         for edge in self.graphData["edges"]:

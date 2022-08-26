@@ -19,42 +19,42 @@ from itertools import combinations
 
 class Node:
     def __init__(self, roadsDic, graph, isDTLS=False):
-        self.nodes = []
+        self.vertices = []
         self.roadsDic = roadsDic
         self.G = graph
         self.isDTLS = isDTLS
-        self.initNodes()
+        self.initVertices()
 
-    def initNodes(self):
-        f = open(f"{os.getcwd()}/src/SimulationConfig/Node_Data.json")
-        self.nodeData = json.load(f)
-        for node in self.nodeData["nodes"]:
-            tmpIcommingRoads = []
-            tmpInnerRoads = []
-            tmpVertices = []
-            for road in node["incomming_roads"]:
-                tmpIcommingRoads.append({
-                    "road": road['name'],
-                    "roadobj": self.roadsDic[road['name']]
-                })
-            for road in node["inner_roads"]:
-                tmpInnerRoads.append({
-                    "road": road['name'],
-                    "roadobj": self.roadsDic[road['name']]
-                })
-            for v in node["vertices"]:
-                tmpVertices.append(v)
-            self.nodes.append(
-                {"incomming_roads": tmpIcommingRoads, "inner_roads": tmpInnerRoads, "vertices": tmpVertices, "name": node["name"]})
+    def initVertices(self):
+        for vertex in self.G.vertices:
+            tmpIcommingRoads_ = []
+            tmpInnerRoads_ = []
+            up_node = vertex['nodes'][0]
+            down_node = vertex['nodes'][1]
+            for node in list(self.G.G.in_edges(up_node)) + list(self.G.G.in_edges(down_node)):
+                road_name = self.G.G.get_edge_data(*node)['name']
+                road_obj = self.roadsDic[self.G.G.get_edge_data(*node)['name']]
+                if(road_obj.isInner):
+                    tmpInnerRoads_.append({
+                        "road": road_name,
+                        "roadobj": road_obj
+                    })
+                else:
+                    tmpIcommingRoads_.append({
+                        "road": road_name,
+                        "roadobj": road_obj
+                    })
+            self.vertices.append({"incomming_roads": tmpIcommingRoads_,
+                                  "inner_roads": tmpInnerRoads_, "nodes": vertex['nodes'], "name": vertex['name']})
 
-    def getNearstVehicles(self, node):
+    def getNearstVehicles(self, vertex):
         nearst_vehicles = []
-        for road in node["incomming_roads"]:
+        for road in vertex["incomming_roads"]:
             if(len(road["roadobj"].vehicles) > 0):
                 # Add last vehicle from each road in incomming_roads of current node if it's not stopped.
                 if(not(road["roadobj"].vehicles[0].stopped)):
                     nearst_vehicles.append(road["roadobj"].vehicles[0])
-        for road in node["inner_roads"]:
+        for road in vertex["inner_roads"]:
             if(len(road["roadobj"].vehicles) > 0):
                 # Add all vehicles in inner roads
                 vehicles = road["roadobj"].vehicles
@@ -63,7 +63,7 @@ class Node:
                 nearst_vehicles += filterd_vehicles
         return nearst_vehicles
 
-    def getChosenCollision(self, node, nearst_vehicles):
+    def getChosenCollision(self, vertex, nearst_vehicles):
         # get all subarrays of size 2 from nearst_vehicles
         possible_collisions = [list(j)
                                for j in combinations(nearst_vehicles, 2)]
@@ -79,7 +79,7 @@ class Node:
                 chosen_collision_vehicles = comb
         if(chosen_collision_vehicles != None):
             # verify collision
-            if(self.verifyCollision(node, chosen_collision_vehicles)):
+            if(self.verifyCollision(vertex, chosen_collision_vehicles)):
                 # no conflict found
                 return None
             collision = [
@@ -101,21 +101,21 @@ class Node:
             collision_vehicles[1].x
         return distance_A < 12 and distance_B < 12
 
-    def verifyCollision(self, node, chosen_collision_vehicles):
+    def verifyCollision(self, vertex, chosen_collision_vehicles):
         # Check for conflict logic:
-        # A = set of all vertices in all nearset vehicles paths.
-        # B = set of vertcies of the current node
+        # A = set of all vertex in all nearset vehicles paths.
+        # B = set of vertcies of the current vertex
         # C = (A intersection B)
         # Conflict exsist only if C is not emptey.
-        vertices_paths = []
+        vertcies_paths = []
         for vehicle in chosen_collision_vehicles:
             p = set()
             for edge in vehicle.edgesPath:
                 p.update(set(self.G.edgesNodes[edge]))
-            vertices_paths.append(p)
-        vertices_paths.append(
-            (set(node["vertices"])))
-        union = set.intersection(*vertices_paths)
+            vertcies_paths.append(p)
+        vertcies_paths.append(
+            (set(vertex["nodes"])))
+        union = set.intersection(*vertcies_paths)
         return len(union) == 0  # True here means that no conflict found
 
     def checkWinnerDeuToTTLTimeOut(self, collision_vehicle_A, collision_vehicle_B, current_time):
@@ -236,7 +236,7 @@ class Node:
             losser_vehicle = collision_vehicle_A['vehicle']
             return winner_vehicle, losser_vehicle
 
-    def getWinnerAndLosser(self, collision, node, current_time):
+    def getWinnerAndLosser(self, collision, current_time):
         # Algorithm:
         # 1. Winner by transaction:
         # 1.1. Winner by Inner Road
@@ -288,18 +288,18 @@ class Node:
     def update(self):
         if(self.isDTLS):  # take no action here if not in DTLS mode
             current_time = time.perf_counter()
-            for node in self.nodes:
+            for vertex in self.vertices:
                 nearst_vehicles = self.getNearstVehicles(
-                    node)
+                    vertex)
                 if (len(nearst_vehicles) > 1):
                     collision = self.getChosenCollision(
-                        node, nearst_vehicles)
+                        vertex, nearst_vehicles)
                     if(collision == None):
                         # No collision
                         continue
                     else:
                         winner_vehicle, losser_vehicle = self.getWinnerAndLosser(
-                            collision, node, current_time)
+                            collision, current_time)
                         if(losser_vehicle.waitTime == None):
                             losser_vehicle.waitTime = time.perf_counter()
                         # winner_vehicle.waitTime = None -> this is now set only when vehicle really leaves the road.

@@ -1,4 +1,13 @@
 {
+    "vertices": [{
+            "name": "V_1_3",
+            "nodes": ["V_1_3_U", "V_1_3_D"]
+        },
+        {
+            "name": "V_1_4",
+            "nodes": ["V_1_4_U", "V_1_4_D"]
+        }
+    ],
     "nodes": [{
             "name": "V_0_0_U",
             "coordinates": {
