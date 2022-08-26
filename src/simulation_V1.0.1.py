@@ -15,7 +15,7 @@ sim.create_nodes(G)
 sim.create_signals(G)
 sim.setGraph(G)
 
-f = open(f"{os.getcwd()}/src/SimulationConfig/Traffic_Data.json")
+f = open(f"{os.getcwd()}/src/SimulationConfig/Heavy_Traffic_Data.json")
 simulationConfig = json.load(f)
 vehiclesGen = []
 for path in simulationConfig["phats"]:
