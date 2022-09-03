@@ -1,6 +1,7 @@
 import networkx as nx
 import os
 import json
+from copy import deepcopy
 
 
 class Graph:

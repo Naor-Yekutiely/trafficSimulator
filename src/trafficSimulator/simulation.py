@@ -76,78 +76,104 @@ class Simulation:
     def create_nodes(self, graph):
         self.nodes = Node(self.roadsDic, graph, self.isDTLS)
 
+    def updatePath(self, vehicle, road):
+        new_vehicle = deepcopy(vehicle)
+        next_road_index = None
+        new_vehicle.x = 0
+        new_vehicle.waitTime = None
+        # check for a better path
+        source = self.G.edgesNodes[road.name][1]
+        target = vehicle.target
+        old_edgesPath = vehicle.edgesPath
+        new_vehicle.path = self.G.getPath(source, target)
+        new_vehicle.edgesPath = self.G.indexPathToEdgesPath(
+            new_vehicle.path)
+        if(len(new_vehicle.path) > 0):
+            next_road_index = new_vehicle.path[0]
+            self.roads[next_road_index].vehicles.append(
+                new_vehicle)
+            new_vehicle.current_road = self.roads[next_road_index]
+        else:  # Leaving simulation
+            # vehicle.current_road
+            self.vehicleCount -= 1
+        return new_vehicle, next_road_index, old_edgesPath
+
+    def updateWieghts_notDTLS(self, new_vehicle, next_road_index, road):
+        # decrese the leaving road weight and increasse comming road wieght.
+        if(new_vehicle.l == 8):  # A bus is switching roads
+            road.wieght -= 0.3
+            if(len(new_vehicle.path) > 0):
+                self.roads[next_road_index].wieght += 0.3
+        elif(new_vehicle.l == 4):  # A car is switching roads
+            road.wieght -= 0.2
+            if(len(new_vehicle.path) > 0):
+                self.roads[next_road_index].wieght += 0.2
+        else:  # A  motorcycle is switching roads
+            road.wieght -= 0.1
+            if(len(new_vehicle.path) > 0):
+                self.roads[next_road_index].wieght += 0.1
+
+    def updateWieghts_DTLS(self, new_vehicle, next_road_index, road, old_edgesPath):
+        factor = 0
+        if(new_vehicle.l == 8):  # A bus is switching roads
+            factor = 0.3
+        elif(new_vehicle.l == 4):  # A car is switching roads
+            factor = 0.2
+        else:  # A  motorcycle is switching roads
+            factor = 0.1
+        # dicrease old path weights with respect to factor and the distance from the road
+        for index, road in enumerate(old_edgesPath):
+            self.roadsDic[road].wieght -= factor * 1 / (index + 1)
+        if(len(new_vehicle.path) > 0):
+            # increasse new path weights with respect to factor and the distance from the road
+            for index, road_name in enumerate(new_vehicle.edgesPath):
+                self.roadsDic[road_name].wieght += factor * 1 / (index + 1)
+
     def update(self):
         # Update every road
-        for index, road in enumerate(self.roads):
-            # next_road = None
-            # if(index + 1 < len(self.roads)):
-            # next_road = self.roads[index+1]
+        for road in self.roads:
             road.update(self.dt, self.roads)
-            # if road.name == 'E_1_4_D' and len(road.vehicles) > 0:
-            #     print("a")
+
         # Add vehicles
         for gen in self.generators:
             gen.update()
 
+        # update signals
         for signal in self.traffic_signals:
             signal.update(self)
 
-        tmp = self.nodes.update()
-        if(tmp == -5):
-            tt = 4
-        elif(tmp == -2):
-            tt = 4
+        # Update nodes - check for collisions and settle them if found.
+        self.nodes.update()
+
         # Check roads for out of bounds vehicle
-        for index, road in enumerate(self.roads):
+        for road in self.roads:
             # If road has no vehicles, continue
             if len(road.vehicles) == 0:
                 continue
             # If not
             vehicle = road.vehicles[0]
-            # If first vehicle is out of road bounds and still not reached end of the path
+            # If first vehicle is out of road bounds
             if vehicle.x >= road.length:
-                # If vehicle has a next road
+                # If vehicle has a next road - still not reached end of the path
                 if len(vehicle.path) > 0:
                     # Update current road to next road
                     # use next road obj and not index..
                     vehicle.current_road_index += 1
-                    if(False):  # TODO: Change it back to self.isDTLS
+                    if(self.isDTLS):
                         # TODO: imlement DTLS road flip here - option_2 in DTLS_Design.
-                        tmp = 0
+                        # self.flipLonelyRoads()
+
+                        new_vehicle, next_road_index, old_edgesPath = self.updatePath(
+                            vehicle, road)
+
+                        self.updateWieghts_DTLS(
+                            new_vehicle, next_road_index, road, old_edgesPath)
                     else:
-                        # if(vehicle.uuid == 'naor_yap'): This is good to track a spisific vehicle
-                        #     print(f'path: {vehicle.edgesPath}')
-                        new_vehicle = deepcopy(vehicle)
-                        new_vehicle.x = 0
-                        new_vehicle.waitTime = None
-                        # check for a better path
-                        source = self.G.edgesNodes[road.name][1]
-                        target = vehicle.target
-                        #old_path = vehicle.path
-                        new_vehicle.path = self.G.getPath(source, target)
-                        new_vehicle.edgesPath = self.G.indexPathToEdgesPath(
-                            new_vehicle.path)
-                        if(len(new_vehicle.path) > 0):
-                            next_road_index = new_vehicle.path[0]
-                            self.roads[next_road_index].vehicles.append(
-                                new_vehicle)
-                            new_vehicle.current_road = self.roads[next_road_index]
-                        else:  # Leaving simulation
-                           # vehicle.current_road
-                            self.vehicleCount -= 1
+                        new_vehicle, next_road_index, old_edgesPath = self.updatePath(
+                            vehicle, road)
                         # decrese the leaving road weight and increasse comming road wieght.
-                        if(new_vehicle.l == 8):  # A bus is switching roads
-                            road.wieght -= 0.3
-                            if(len(new_vehicle.path) > 0):
-                                self.roads[next_road_index].wieght += 0.3
-                        elif(new_vehicle.l == 4):  # A car is switching roads
-                            road.wieght -= 0.2
-                            if(len(new_vehicle.path) > 0):
-                                self.roads[next_road_index].wieght += 0.2
-                        else:  # A  motorcycle is switching roads
-                            road.wieght -= 0.1
-                            if(len(new_vehicle.path) > 0):
-                                self.roads[next_road_index].wieght += 0.1
+                        self.updateWieghts_notDTLS(
+                            new_vehicle, next_road_index, road)
 
                     # vehicle.edgesPath = self.G.indexPathToEdgesPath(vehicle.path)
                 else:  # Leaving simulation
@@ -157,8 +183,8 @@ class Simulation:
 
                 # In all cases, remove it from its road
                 road.vehicles.popleft()
-        # Increment time
 
+        # Increment time
         self.t += self.dt
         self.frame_count += 1
 

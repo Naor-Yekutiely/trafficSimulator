@@ -53,13 +53,20 @@ class VehicleGenerator:
                 road.vehicles.append(self.upcoming_vehicle)
                 self.upcoming_vehicle.current_road = road
                 self.upcoming_vehicle.position = road.start
-                # increase added roads wieght
+                # increase added roads wieght according to simulation type - DTLS or regular
+                factor = 0
                 if(self.upcoming_vehicle.l == 8):  # A bus is switching roads
-                    road.wieght += 0.3
+                    factor = 0.3
                 elif(self.upcoming_vehicle.l == 4):  # A car is switching roads
-                    road.wieght += 0.2
+                    factor = 0.2
                 else:  # A  motorcycle is switching roads
-                    road.wieght += 0.1
+                    factor = 0.1
+                if(self.sim.isDTLS):
+                    for index, road_name in enumerate(self.upcoming_vehicle.edgesPath):
+                        self.sim.roadsDic[road_name].wieght += factor * \
+                            1 / (index + 1)
+                else:
+                    road.wieght += factor
                 # Reset last_added_time and upcoming_vehicle
                 self.last_added_time = self.sim.t
                 self.upcoming_vehicle = self.generate_vehicle()

@@ -27,7 +27,7 @@ option_2(graph G = (V,E))
 1.while(true):
 2.  generateNewVehicles() # And update all edges weights with respect to a factor that is a function of the distance from the edge.
 3.  if(t % T == 0): # t - current time, T - frequency of edges flip.
-4.      resetAllEdgesWeights()
+4.      resetAllEdgesWeights() # this open the option to go to busy roads at start??
 5.      flipUnusedEdges() # An unused edge is a edge that dosn't Appear in the first X edges of any of the current paths. X will be selected by trail and error.
 6.  dijikstraAllVehicles() # calculate the shortest path for each veichle. Make sure to update edges weights with respect to a factor that is a function of the distance from the edge.
 
