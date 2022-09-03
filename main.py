@@ -33,7 +33,7 @@ def clean_selection():
 
 def run_sim_on_click():
     wd = os.getcwd()
-    sim_path = f"{wd}/src/simulation_V1.0.1.py"
+    sim_path = f"{wd}/src/simulation_runner.py"
     subprocess.call(f"python3 {sim_path}", shell=True)
     docker_path = f"{wd}/infrastructure"
     os.chdir(docker_path)
