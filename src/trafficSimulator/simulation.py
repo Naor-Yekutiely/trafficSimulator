@@ -1,5 +1,6 @@
 #from lib2to3.pgen2 import grammar
 #from unittest import case
+from asyncio import constants
 from .road import Road
 from .node import Node
 from copy import deepcopy
@@ -31,6 +32,8 @@ class Simulation:
         self.traffic_signals = []
         self.vehicleCount = 0
         self.road_one_tp = 0
+        self.throughput = 0
+        self.start_count_throughput = False
 
     def setGraph(self, Graph):
         self.G = Graph
@@ -96,6 +99,10 @@ class Simulation:
         else:  # Leaving simulation
             # vehicle.current_road
             self.vehicleCount -= 1
+            self.throughput += 1
+            print(
+                f'isDTLS = {self.isDTLS}, throughput = {self.throughput}')
+            self.start_count_throughput = True
         return new_vehicle, next_road_index, old_edgesPath
 
     def updateWieghts_notDTLS(self, new_vehicle, next_road_index, road):
@@ -159,27 +166,17 @@ class Simulation:
                     # Update current road to next road
                     # use next road obj and not index..
                     vehicle.current_road_index += 1
+                    new_vehicle, next_road_index, old_edgesPath = self.updatePath(
+                        vehicle, road)
                     if(self.isDTLS):
-                        # TODO: imlement DTLS road flip here - option_2 in DTLS_Design.
-                        # self.flipLonelyRoads()
-
-                        new_vehicle, next_road_index, old_edgesPath = self.updatePath(
-                            vehicle, road)
-
+                        # dicrease old path weights with respect to factor and the distance from the road
+                        # increasse new path weights with respect to factor and the distance from the road
                         self.updateWieghts_DTLS(
                             new_vehicle, next_road_index, road, old_edgesPath)
                     else:
-                        new_vehicle, next_road_index, old_edgesPath = self.updatePath(
-                            vehicle, road)
                         # decrese the leaving road weight and increasse comming road wieght.
                         self.updateWieghts_notDTLS(
                             new_vehicle, next_road_index, road)
-
-                    # vehicle.edgesPath = self.G.indexPathToEdgesPath(vehicle.path)
-                else:  # Leaving simulation
-                    self.vehicleCount -= 1
-                    # if(index == 15):
-                    #self.road_one_tp += 1
 
                 # In all cases, remove it from its road
                 road.vehicles.popleft()
