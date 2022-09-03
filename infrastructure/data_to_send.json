@@ -1,13 +1,8 @@
-[ 
-    {
-        "measurement": "test_measurement",
-        "tags": {
-            "user": "Carol",
-            "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
-        },
-        "time": "2018-03-28T8:01:00Z",
+[{
+        "measurement": "test_measurement_10",
+        "time": "2018-03-28T8:05:00Z",
         "fields": {
-            "duration": 127
+            "duration": 874
         }
     },
     {
@@ -16,9 +11,9 @@
             "user": "Carol",
             "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
         },
-        "time": "2018-03-29T8:04:00Z",
+        "time": "2018-03-29T8:03:00Z",
         "fields": {
-            "duration": 132
+            "duration": 548
         }
     },
     {
@@ -27,9 +22,9 @@
             "user": "Carol",
             "brushId": "6c89f539-71c6-490d-a28d-6c5d84c0ee2f"
         },
-        "time": "2018-03-30T8:02:00Z",
+        "time": "2018-03-30T8:09:00Z",
         "fields": {
-            "duration": 129
+            "duration": 7933
         }
     }
 ]

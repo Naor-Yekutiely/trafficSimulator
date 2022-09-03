@@ -1,11 +1,12 @@
 from trafficSimulator import *
 import subprocess
 
-# wd = os.getcwd()
-# docker_path = f"{wd}/infrastructure"
-# os.chdir(docker_path)
-# subprocess.run(['docker-compose', 'up', '-d'], check=True)
-# os.chdir(wd)
+wd = os.getcwd()
+docker_path = f"{wd}/infrastructure"
+os.chdir(docker_path)
+subprocess.run(['docker-compose', 'up', '-d'], check=True)
+os.chdir(wd)
+
 isDTLS = True
 sim = Simulation(isDTLS)  # isDTLS param..
 G = Graph()
