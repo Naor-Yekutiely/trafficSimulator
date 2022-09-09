@@ -15,6 +15,7 @@ class Simulation:
     def __init__(self, simulation_number, isDTLS=False, config={}):
         # Set default configuration
         self.isDTLS = isDTLS
+        # TODO: Use the simulation_number in  all data send to influxDB
         self.simulation_number = simulation_number
         self.set_default_config()
 
