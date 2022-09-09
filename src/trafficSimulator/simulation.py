@@ -12,9 +12,10 @@ import json
 
 
 class Simulation:
-    def __init__(self, isDTLS=False, config={}):
+    def __init__(self, simulation_number, isDTLS=False, config={}):
         # Set default configuration
         self.isDTLS = isDTLS
+        self.simulation_number = simulation_number
         self.set_default_config()
 
         # Update configuration
