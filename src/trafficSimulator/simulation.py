@@ -12,11 +12,11 @@ import json
 
 
 class Simulation:
-    def __init__(self, simulation_number, isDTLS=False, config={}):
+    def __init__(self, influxdb_client, isDTLS=False, config={}):
         # Set default configuration
         self.isDTLS = isDTLS
         # TODO: Use the simulation_number in  all data send to influxDB
-        self.simulation_number = simulation_number
+        self.influxdb_client = influxdb_client
         self.set_default_config()
 
         # Update configuration
@@ -99,11 +99,11 @@ class Simulation:
                 new_vehicle)
             new_vehicle.current_road = self.roads[next_road_index]
         else:  # Leaving simulation
-            # vehicle.current_road
             self.vehicleCount -= 1
             self.throughput += 1
             print(
-                f'isDTLS = {self.isDTLS}, throughput = {self.throughput}')
+                f'vehicle: {vehicle.uuid}, isDTLS = {self.isDTLS}, simulation_number: {self.influxdb_client.simulation_number}')
+            # influxdb_client.log+to_influx here...
             self.start_count_throughput = True
         return new_vehicle, next_road_index, old_edgesPath
 

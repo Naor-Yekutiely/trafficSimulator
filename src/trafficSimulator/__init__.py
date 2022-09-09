@@ -6,3 +6,4 @@ from .vehicle_generator import *
 from .traffic_signal import *
 from .graph import *
 from .node import *
+from .InfluxLogger import *
