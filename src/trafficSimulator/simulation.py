@@ -101,9 +101,14 @@ class Simulation:
         else:  # Leaving simulation
             self.vehicleCount -= 1
             self.throughput += 1
-            print(
-                f'vehicle: {vehicle.uuid}, isDTLS = {self.isDTLS}, simulation_number: {self.influxdb_client.simulation_number}')
+            # print(
+            #     f'vehicle: {vehicle.uuid}, isDTLS = {self.isDTLS}, simulation_number: {self.influxdb_client.simulation_number}')
             # influxdb_client.log+to_influx here...
+            tags = {
+                "isDTLS": self.isDTLS,
+                "vehicleUUID": vehicle.uuid
+            }
+            self.influxdb_client.log_to_influx('throughput', tags)
             self.start_count_throughput = True
         return new_vehicle, next_road_index, old_edgesPath
 

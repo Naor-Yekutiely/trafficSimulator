@@ -34,8 +34,7 @@ option_2(graph G = (V,E))
 
 
 report metrics:
-# number of finished cars / time
-# check if flipping edges lead to a big difference
+# number of finished cars / time - Done
 # Avg time to finish path 
 # Avg wating time
 # Avg wating per node / road 
