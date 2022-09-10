@@ -1,7 +1,7 @@
 from .vehicle import Vehicle
 from numpy.random import randint
 from collections import deque
-#import time
+import time
 
 
 class VehicleGenerator:
@@ -49,7 +49,7 @@ class VehicleGenerator:
             if len(road.vehicles) == 0\
                or road.vehicles[-1].x - road.vehicles[-1].l > self.upcoming_vehicle.s0 + self.upcoming_vehicle.l + delta_space:
                 # If there is space for the generated vehicle; add it
-                self.upcoming_vehicle.time_added = self.sim.t
+                self.upcoming_vehicle.time_added = time.perf_counter()
                 road.vehicles.append(self.upcoming_vehicle)
                 self.upcoming_vehicle.current_road = road
                 self.upcoming_vehicle.position = road.start

@@ -8,6 +8,7 @@ from .vehicle_generator import VehicleGenerator
 from .traffic_signal import TrafficSignal
 import os
 import json
+import time
 #import networkx as nx
 
 
@@ -101,12 +102,11 @@ class Simulation:
         else:  # Leaving simulation
             self.vehicleCount -= 1
             self.throughput += 1
-            # print(
-            #     f'vehicle: {vehicle.uuid}, isDTLS = {self.isDTLS}, simulation_number: {self.influxdb_client.simulation_number}')
-            # influxdb_client.log+to_influx here...
+            duration = time.perf_counter() - vehicle.time_added
             tags = {
                 "isDTLS": self.isDTLS,
-                "vehicleUUID": vehicle.uuid
+                "vehicleUUID": vehicle.uuid,
+                "durationInSeconds": duration
             }
             self.influxdb_client.log_to_influx('throughput', tags)
             self.start_count_throughput = True
