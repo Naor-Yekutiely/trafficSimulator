@@ -106,7 +106,9 @@ class Simulation:
             tags = {
                 "isDTLS": self.isDTLS,
                 "vehicleUUID": vehicle.uuid,
-                "durationInSeconds": duration
+                "durationInSeconds": duration,
+                "totalStopTime": vehicle.total_stop_time,
+                "currentVehiclesCount": self.vehicleCount
             }
             self.influxdb_client.log_to_influx('throughput', tags)
             self.start_count_throughput = True

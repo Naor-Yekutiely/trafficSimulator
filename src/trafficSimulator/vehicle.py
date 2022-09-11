@@ -3,6 +3,7 @@ import numpy as np
 from numpy.random import randint
 import random
 import uuid
+import time
 
 
 class Vehicle:
@@ -51,6 +52,8 @@ class Vehicle:
         self.current_road = None
         self.waitTime = None
         self.time_added = None
+        self.total_stop_time = 0.0
+        self.current_stop_timer = 0
 
         self.x = 0
         self.v = self.v_max
@@ -96,9 +99,12 @@ class Vehicle:
             self.current_road.start[0] + self.current_road.angle_cos * self.x, self.current_road.start[1] + self.current_road.angle_sin * self.x)
 
     def stop(self):
+        if (self.current_stop_timer == 0):
+            self.current_stop_timer = time.perf_counter()
         self.stopped = True
 
     def unstop(self):
+        self.increment_total_stop()
         self.stopped = False
 
     def slow(self, v):
@@ -106,3 +112,12 @@ class Vehicle:
 
     def unslow(self):
         self.v_max = self._v_max
+
+    def increment_total_stop(self):
+        if (self.stopped):
+            if (self.current_stop_timer > 0):
+                self.total_stop_time += time.perf_counter() - self.current_stop_timer
+                self.current_stop_timer = 0
+            else:
+                raise Exception(
+                    "Vehicle is stopped but current_stop_timer is not set")

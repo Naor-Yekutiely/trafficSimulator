@@ -35,7 +35,7 @@ option_2(graph G = (V,E))
 
 report metrics:
 # number of finished cars / time - Done
-# Avg time to finish path 
+# Avg time to finish path  - Done
 # Avg wating time
 # Avg wating per node / road 
 # Avg speed
