@@ -325,32 +325,18 @@ class Window:
                             color=color)
 
     def draw_status(self):
-        text_fps = self.text_font.render(
-            f't={self.sim.t:.5}', False, (255, 255, 255))
-        text_frc = self.text_font.render(
-            f'n={self.sim.frame_count}', False, (255, 255, 255))
         vehicle_count = self.text_font.render(
-            f'vehiclecount={self.sim.vehicleCount}', False, (255, 255, 255))
-        road_one_tp = self.text_font.render(
-            f'road_one_tp={self.sim.road_one_tp}', False, (255, 255, 255))
+            f'vehiclecount={self.sim.currentVehicleCount}', False, (255, 255, 255))
 
         running_time = self.text_font.render(
             f'running_time={(time.time()-self.running_time):.5}', False, (255, 255, 255))
 
-        #self.screen.blit(text_fps, (0, 0))
-        #self.screen.blit(text_frc, (100, 0))
         self.screen.blit(vehicle_count, (0, 0))
-        self.screen.blit(road_one_tp, (200, 0))
-        self.screen.blit(running_time, (420, 0))
+        self.screen.blit(running_time, (200, 0))
 
     def draw(self):
         # Fill background
         self.background(*self.bg_color)
-
-        # Major and minor grid and axes
-        # self.draw_grid(10, (220,220,220))
-        # self.draw_grid(100, (200,200,200))
-        # self.draw_axes()
 
         self.draw_roads()
         self.draw_vehicles()

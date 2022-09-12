@@ -7,7 +7,7 @@ class Road:
         self.start = start
         self.end = end
         self.name = name
-        self.wieght = wieght
+        self.wieght = float(wieght)
         self.priority = priority
         self.INITIAL_WIEGHT = wieght
         self.isInner = False

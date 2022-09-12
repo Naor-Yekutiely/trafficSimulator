@@ -1,5 +1,5 @@
 from .vehicle import Vehicle
-from numpy.random import randint
+from numpy.random import randint, choice
 from collections import deque
 import time
 
@@ -7,6 +7,11 @@ import time
 class VehicleGenerator:
     def __init__(self, sim, config={}):
         self.sim = sim
+        self.last_added_time_tmp = 0.0
+
+        # for (weight, config) in config['vehicles']:
+        #     self.weights_arr.append(weight)
+        #     self.config_arr.append(config)
 
         # Set default configurations
         self.set_default_config()
@@ -20,7 +25,7 @@ class VehicleGenerator:
 
     def set_default_config(self):
         """Set default configuration"""
-        self.vehicle_rate = 20
+        self.vehicle_rate = 0.01  # Generate a new vehicle evrey 100ms
         self.vehicles = [
             (1, {})
         ]
@@ -32,6 +37,7 @@ class VehicleGenerator:
 
     def generate_vehicle(self):
         """Returns a random vehicle from self.vehicles with random proportions"""
+        #selected_config = choice(a=self.config_arr, size=1, p=self.weights_arr)
         total = sum(pair[0] for pair in self.vehicles)
         r = randint(1, total+1)
         for (weight, config) in self.vehicles:
@@ -42,14 +48,16 @@ class VehicleGenerator:
     def update(self):
         """Add vehicles"""
         delta_space = 5
-        if self.sim.t - self.last_added_time >= 60 / self.vehicle_rate:
+        if self.sim.current_time - self.last_added_time_tmp >= 0.01:
             # If time elasped after last added vehicle is
             # greater than vehicle_period; generate a vehicle
             road = self.sim.roads[self.upcoming_vehicle.path[0]]
             if len(road.vehicles) == 0\
                or road.vehicles[-1].x - road.vehicles[-1].l > self.upcoming_vehicle.s0 + self.upcoming_vehicle.l + delta_space:
                 # If there is space for the generated vehicle; add it
-                self.upcoming_vehicle.time_added = time.perf_counter()
+                now = time.perf_counter()
+                self.upcoming_vehicle.time_added = now
+                self.last_added_time_tmp = now
                 road.vehicles.append(self.upcoming_vehicle)
                 self.upcoming_vehicle.current_road = road
                 self.upcoming_vehicle.position = road.start
@@ -67,7 +75,7 @@ class VehicleGenerator:
                             1 / (index + 1)
                 else:
                     road.wieght += factor
-                # Reset last_added_time and upcoming_vehicle
-                self.last_added_time = self.sim.t
+                # Generate next vehicle upcoming_vehicle
                 self.upcoming_vehicle = self.generate_vehicle()
-                self.sim.vehicleCount += 1
+                self.sim.currentVehicleCount += 1
+                self.sim.genertedVehiclesCount += 1

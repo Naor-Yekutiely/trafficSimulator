@@ -25,6 +25,7 @@ class Simulation:
             setattr(self, attr, val)
 
     def set_default_config(self):
+        self.current_time = None
         self.t = 0.0            # Time keeping
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
@@ -33,10 +34,8 @@ class Simulation:
         self.roadsDic = {}
         self.generators = []
         self.traffic_signals = []
-        self.vehicleCount = 0
-        self.road_one_tp = 0
-        self.throughput = 0
-        self.start_count_throughput = False
+        self.currentVehicleCount = 0
+        self.genertedVehiclesCount = 0
 
     def setGraph(self, Graph):
         self.G = Graph
@@ -99,19 +98,27 @@ class Simulation:
             self.roads[next_road_index].vehicles.append(
                 new_vehicle)
             new_vehicle.current_road = self.roads[next_road_index]
+            # TODO: Here log for evrey road his wieth / number of v on the road
+            if (not(new_vehicle.current_road.isInner)):  # Don't Log data for inner roads
+                tags = {
+                    "isDTLS": self.isDTLS,
+                    "roadName": new_vehicle.current_road.name,
+                    "vehiclesCount": len(new_vehicle.current_road.vehicles),
+                    "roadCurrentWieght": new_vehicle.current_road.wieght
+                }
+                self.influxdb_client.log_to_influx('roads', tags)
         else:  # Leaving simulation
-            self.vehicleCount -= 1
-            self.throughput += 1
+            self.currentVehicleCount -= 1
             duration = time.perf_counter() - vehicle.time_added
             tags = {
                 "isDTLS": self.isDTLS,
                 "vehicleUUID": vehicle.uuid,
                 "durationInSeconds": duration,
                 "totalStopTime": vehicle.total_stop_time,
-                "currentVehiclesCount": self.vehicleCount
+                "currentVehiclesCount": self.currentVehicleCount,
+                "genertedVehiclesCount": self.genertedVehiclesCount
             }
             self.influxdb_client.log_to_influx('throughput', tags)
-            self.start_count_throughput = True
         return new_vehicle, next_road_index, old_edgesPath
 
     def updateWieghts_notDTLS(self, new_vehicle, next_road_index, road):
@@ -147,6 +154,7 @@ class Simulation:
 
     def update(self):
         # Update every road
+        self.current_time = time.perf_counter()
         for road in self.roads:
             road.update(self.dt, self.roads)
 
