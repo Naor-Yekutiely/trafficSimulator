@@ -26,7 +26,7 @@ class InfluxLogger:
     def log_to_influx(self, measurement_name, tags):
         data = []
         now = datetime.now()
-        dt_string = now.strftime("%Y/%m/%dT%H:%M:%S.000Z")
+        dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         tags["Simulation_number"] = self.simulation_number
         tags["Simulation_config"] = self.sim_name
         tags["date_time"] = dt_string
