@@ -3,10 +3,11 @@ from collections import deque
 
 
 class Road:
-    def __init__(self, start, end, name, wieght, priority):
+    def __init__(self, start, end, name, wieght, priority, nodes):
         self.start = start
         self.end = end
         self.name = name
+        self.nodes = nodes
         self.wieght = float(wieght)
         self.priority = priority
         self.INITIAL_WIEGHT = wieght

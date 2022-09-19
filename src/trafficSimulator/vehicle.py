@@ -54,6 +54,7 @@ class Vehicle:
         self.time_added = None
         self.total_stop_time = 0.0
         self.current_stop_timer = 0
+        self.isChangedPath = False
 
         self.x = 0
         self.v = self.v_max

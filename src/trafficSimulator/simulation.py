@@ -9,6 +9,7 @@ from .traffic_signal import TrafficSignal
 import os
 import json
 import time
+import numpy as np
 #import networkx as nx
 
 
@@ -40,8 +41,8 @@ class Simulation:
     def setGraph(self, Graph):
         self.G = Graph
 
-    def create_road(self, start, end, name, wieght, priority):
-        road = Road(start, end, name, wieght, priority)
+    def create_road(self, start, end, name, wieght, priority, nodes):
+        road = Road(start, end, name, wieght, priority, nodes)
         self.roads.append(road)
         self.roadsDic[name] = road
         return road
@@ -81,6 +82,13 @@ class Simulation:
     def create_nodes(self, graph):
         self.nodes = Node(self.roadsDic, graph, self.isDTLS)
 
+    def check_if_path_cahnged_and_log(self, old_edgesPath, new_edgesPath, new_vehicle):
+        if (not(np.array_equal(old_edgesPath, new_edgesPath))):
+            print(
+                f"path has changed. isDTLS: {self.isDTLS}\n oldPath: {old_edgesPath}\n newPath: {new_edgesPath}")
+            new_vehicle.isChangedPath = True
+            # TODO: log here to influx andm check why path chnage is not so good somthims..
+
     def updatePath(self, vehicle, road):
         new_vehicle = deepcopy(vehicle)
         next_road_index = None
@@ -94,6 +102,8 @@ class Simulation:
         new_vehicle.edgesPath = self.G.indexPathToEdgesPath(
             new_vehicle.path)
         if(len(new_vehicle.path) > 0):
+            self.check_if_path_cahnged_and_log(
+                old_edgesPath[1:], new_vehicle.edgesPath, new_vehicle)
             next_road_index = new_vehicle.path[0]
             self.roads[next_road_index].vehicles.append(
                 new_vehicle)
@@ -123,27 +133,28 @@ class Simulation:
 
     def updateWieghts_notDTLS(self, new_vehicle, next_road_index, road):
         # decrese the leaving road weight and increasse comming road wieght.
+        factor = 0
         if(new_vehicle.l == 8):  # A bus is switching roads
-            road.wieght -= 0.3
-            if(len(new_vehicle.path) > 0):
-                self.roads[next_road_index].wieght += 0.3
+            factor = 0.4
         elif(new_vehicle.l == 4):  # A car is switching roads
-            road.wieght -= 0.2
-            if(len(new_vehicle.path) > 0):
-                self.roads[next_road_index].wieght += 0.2
+            factor = 0.3
         else:  # A  motorcycle is switching roads
-            road.wieght -= 0.1
-            if(len(new_vehicle.path) > 0):
-                self.roads[next_road_index].wieght += 0.1
+            factor = 0.2
+
+        road.wieght -= factor
+        self.G.G.edges[road.nodes]['weight'] -= factor
+        if(len(new_vehicle.path) > 0):
+            self.roads[next_road_index].wieght += factor
+            self.G.G.edges[self.roads[next_road_index].nodes]['weight'] += factor
 
     def updateWieghts_DTLS(self, new_vehicle, next_road_index, road, old_edgesPath):
         factor = 0
         if(new_vehicle.l == 8):  # A bus is switching roads
-            factor = 0.3
+            factor = 0.4
         elif(new_vehicle.l == 4):  # A car is switching roads
-            factor = 0.2
+            factor = 0.3
         else:  # A  motorcycle is switching roads
-            factor = 0.1
+            factor = 0.2
         # dicrease old path weights with respect to factor and the distance from the road
         for index, road in enumerate(old_edgesPath):
             self.roadsDic[road].wieght -= factor * 1 / (index + 1)

@@ -38,12 +38,12 @@ class Graph:
             self.edgesNodes[self.G.get_edge_data(e[0], e[1])["name"]] = [
                 e[0], e[1]]
             edgesTuples.append(((self.G.nodes.get(e[0])["coordinates"]["x"], self.G.nodes.get(e[0])[
-                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"], self.G.get_edge_data(e[0], e[1])['weight'], self.G.get_edge_data(e[0], e[1])['priority']))
+                               "coordinates"]["y"]), (self.G.nodes.get(e[1])["coordinates"]["x"], self.G.nodes.get(e[1])["coordinates"]["y"]), self.G.get_edge_data(e[0], e[1])["name"], self.G.get_edge_data(e[0], e[1])['weight'], self.G.get_edge_data(e[0], e[1])['priority'], [e[0], e[1]]))
         return edgesTuples
 
     def getPath(self, source, target):
         try:
-            path = nx.dijkstra_path(self.G, source, target)
+            path = nx.dijkstra_path(self.G, source, target, "weight")
             return self.nodePathToIndexPath(path)
         except Exception as err:
             print(err)

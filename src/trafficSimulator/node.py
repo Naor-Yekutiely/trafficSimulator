@@ -160,7 +160,17 @@ class Node:
         winner_vehicle = None
         losser_vehicle = None
         if(collision_vehicle_A['vehicle'].current_road.isInner and collision_vehicle_B['vehicle'].current_road.isInner):
-            raise Exception("Two vehicles on inner roads.")
+            if (collision_vehicle_A['vehicle'].current_road.current_road.name == collision_vehicle_B['vehicle'].current_road.name):
+                if (collision_vehicle_A['vehicle'].current_road.x > collision_vehicle_B['vehicle'].current_road.x):
+                    winner_vehicle = collision_vehicle_A['vehicle']
+                    losser_vehicle = collision_vehicle_B['vehicle']
+                    return winner_vehicle, losser_vehicle
+                elif (collision_vehicle_A['vehicle'].current_road.x < collision_vehicle_B['vehicle'].current_road.x):
+                    winner_vehicle = collision_vehicle_B['vehicle']
+                    losser_vehicle = collision_vehicle_A['vehicle']
+                    return winner_vehicle, losser_vehicle
+            else:
+                raise Exception("Two vehicles on inner roads.")
         if(collision_vehicle_A['vehicle'].current_road.isInner or collision_vehicle_B['vehicle'].current_road.isInner):
             if(collision_vehicle_A['vehicle'].current_road.isInner):
                 # Found winner due to inner road

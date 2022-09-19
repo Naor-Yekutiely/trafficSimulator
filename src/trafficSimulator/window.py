@@ -1,4 +1,5 @@
 import datetime
+from pickle import FALSE
 
 import pygame
 from pygame import gfxdraw
@@ -156,9 +157,8 @@ class Window:
         gfxdraw.aapolygon(self.screen, vertices, color)
         if filled:
             gfxdraw.filled_polygon(self.screen, vertices, color)
-# car color
 
-    def rotated_box(self, pos, size, angle=None, cos=None, sin=None, centered=True, color=(0, 0, 0), filled=True):
+    def rotated_box(self, pos, size, angle=None, cos=None, sin=None, centered=True, color=(0, 0, 0), filled=True, isChangedPath=False):
         """Draws a rectangle center at *pos* with size *size* rotated anti-clockwise by *angle*."""
         x, y = pos
         l, h = size
@@ -169,6 +169,8 @@ class Window:
             color = (255, 255, 0)
         if l == 8:  # truck
             color = (255, 0, 255)
+        if (isChangedPath):
+            color = (255, 255, 255)
 
         if angle:
             cos, sin = np.cos(angle), np.sin(angle)
@@ -296,7 +298,8 @@ class Window:
         x = road.start[0] + cos * vehicle.x
         y = road.start[1] + sin * vehicle.x
 
-        self.rotated_box((x, y), (l, h), cos=cos, sin=sin, centered=True)
+        self.rotated_box((x, y), (l, h),
+                         cos=cos, sin=sin, centered=True, isChangedPath=vehicle.isChangedPath)
 
     def draw_vehicles(self):
         for road in self.sim.roads:

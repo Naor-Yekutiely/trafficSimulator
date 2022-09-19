@@ -64,17 +64,20 @@ class VehicleGenerator:
                 # increase added roads wieght according to simulation type - DTLS or regular
                 factor = 0
                 if(self.upcoming_vehicle.l == 8):  # A bus is switching roads
-                    factor = 0.3
+                    factor = 0.4
                 elif(self.upcoming_vehicle.l == 4):  # A car is switching roads
-                    factor = 0.2
+                    factor = 0.3
                 else:  # A  motorcycle is switching roads
-                    factor = 0.1
+                    factor = 0.2
                 if(self.sim.isDTLS):
                     for index, road_name in enumerate(self.upcoming_vehicle.edgesPath):
                         self.sim.roadsDic[road_name].wieght += factor * \
                             1 / (index + 1)
+                        self.sim.G.G.edges[self.sim.roadsDic[road_name].nodes]['weight'] += factor * \
+                            1 / (index + 1)
                 else:
                     road.wieght += factor
+                    self.sim.G.G.edges[road.nodes]['weight'] += factor
                 # Generate next vehicle upcoming_vehicle
                 self.upcoming_vehicle = self.generate_vehicle()
                 self.sim.currentVehicleCount += 1
