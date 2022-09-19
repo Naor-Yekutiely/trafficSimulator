@@ -1,7 +1,7 @@
 import re
 from telnetlib import NOP
 from influxdb import InfluxDBClient
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class InfluxLogger:
@@ -25,10 +25,11 @@ class InfluxLogger:
 
     def log_to_influx(self, measurement_name, tags):
         data = []
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+        now_minus_one_minute = datetime.now() - timedelta(minutes=1)
+        dt_string = now_minus_one_minute.strftime("%Y-%m-%d %H:%M:%S")
         tags["Simulation_number"] = self.simulation_number
-        tags["Simulation_config"] = self.sim_name
+        if (measurement_name == "Simulation_counter"):
+            tags["Simulation_config"] = self.sim_name
         tags["date_time"] = dt_string
         data.append({
             "measurement": measurement_name,
