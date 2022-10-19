@@ -24,8 +24,6 @@ selected_sim_Index = IntVar()
 
 def load_main_window():
     title = Label(main_window, text="DTLS simulator", font=("", 20))
-    # canvas = Canvas(main_window, width=370, height=150)
-    # canvas.place(x=38, y=65)
     subtitle = Label(
         main_window, text="Select the disered configuration & click 'Run'")
     title.pack()
