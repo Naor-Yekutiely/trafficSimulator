@@ -1,10 +1,15 @@
-from email.policy import default
 from tkinter import *
 import os
-from functools import partial
 import subprocess
 
 main_window = Tk()
+main_window.geometry("450x200")
+background_photo = PhotoImage(file=os.getcwd() +
+                              "/src/background/bg.png")
+run_photo = PhotoImage(file=os.getcwd() +
+                       "/src/background/run-button-md.png")
+backgroundLabel = Label(main_window, image=background_photo)
+backgroundLabel.place(x=0, y=0, relwidth=1, relheight=1)
 simulation_options_UI = ["Heavy Traffic",
                          "Option 2", "Option 3", "Option 4"]
 simulation_names = ["Heavy_Traffic",
@@ -19,12 +24,12 @@ selected_sim_Index = IntVar()
 
 def load_main_window():
     title = Label(main_window, text="DTLS simulator", font=("", 20))
-    subtitle = Label(main_window, text="!Add Description!")
+    # canvas = Canvas(main_window, width=370, height=150)
+    # canvas.place(x=38, y=65)
+    subtitle = Label(
+        main_window, text="Select the disered configuration & click 'Run'")
     title.pack()
     subtitle.pack()
-    run_sim_parallel_btn = Button(
-        text="Run Simulation", width=15, height=3, command=run_sim_on_click)
-    run_sim_parallel_btn.pack()
 
     selected_sim_option.set(simulation_options_UI[0])
     selected_sim_Index.set(0)
@@ -36,10 +41,13 @@ def load_main_window():
         command=display_selected)
 
     dropdown.pack(expand=True)
-    #option_var = StringVar(self)
-    # run_quick_sim_btn = Button(
-    #     text="Quick Simulation", width=15, height=3, command=run_sim_on_click)
-    # run_quick_sim_btn.pack()
+
+    run_sim_parallel_btn = Button(
+        image=run_photo, command=run_sim_on_click)
+    run_sim_parallel_btn.pack()
+
+    frame = Frame(main_window)
+    frame.pack(pady=20)
 
 
 def display_selected(selected_sim):
@@ -73,5 +81,4 @@ def run_sim_on_click():
 
 
 load_main_window()
-# select_main_options()
 main_window.mainloop()

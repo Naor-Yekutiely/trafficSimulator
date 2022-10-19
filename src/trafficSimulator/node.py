@@ -132,7 +132,6 @@ class Node:
         losser_vehicle = None
         Vehicle_A = collision_vehicle_A['vehicle']
         Vehicle_B = collision_vehicle_B['vehicle']
-        # TODO: set a ttl for evrey road and use it. This can imlement the prirty of roads.
         # Max time we allow for a vechile to wait before he preemptively takes the right of way. - in seconds
         starvation_TTL_factor = 15
         if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > starvation_TTL_factor)):
@@ -261,9 +260,8 @@ class Node:
         # 1.1. Winner by Inner Road
         # 1.2. Winner by Road Transfer
         # 2. Winner by TTL
-        # 3. Winner by traffic density in the road - not in use for now
-        # 4. Winner by Road Priorty
-        # 5. Winner by proximity to the conflict Node
+        # 3. Winner by Road Priorty
+        # 4. Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
         collision_vehicle_A, collision_vehicle_B = collision
@@ -282,12 +280,6 @@ class Node:
         if(winner_vehicle != None and losser_vehicle != None):
             # Found winner due to timeout of TTL
             return winner_vehicle, losser_vehicle
-        # TODO: checkWinnerDeuToTrafficDensity seems to be bad :(
-        # winner_vehicle, losser_vehicle = self.checkWinnerDeuToTrafficDensity(
-        #     collision_vehicle_A, collision_vehicle_B)
-        # if(winner_vehicle != None and losser_vehicle != None):
-        #     # Found winner due to Traffic Density
-        #     return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToPriority(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):

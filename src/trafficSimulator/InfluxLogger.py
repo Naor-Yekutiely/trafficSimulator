@@ -1,4 +1,4 @@
-import re
+import time
 from telnetlib import NOP
 from influxdb import InfluxDBClient
 from datetime import datetime, timedelta
@@ -21,7 +21,8 @@ class InfluxLogger:
 
         self.log_to_influx('Simulation_counter', {
                            "Simulation_number": self.simulation_number})
-        print(f"Current simulation number = {self.simulation_number}")
+        print(
+            f"Grafana is up and running on http://localhost:3000\nCurrent simulation number = {self.simulation_number}")
 
     def log_to_influx(self, measurement_name, tags):
         data = []
@@ -46,10 +47,11 @@ class InfluxLogger:
         return res_points
 
     def isInfluxReady(self):
-        health = self.influx_client.ping()
-        if (health):
-            return True
-        return False
+        try:
+            if (self.influx_client.ping()):
+                return True
+        except Exception:
+            return False
 
     def waitUntilInfluxIsReady(self):
         while (not(self.isInfluxReady())):

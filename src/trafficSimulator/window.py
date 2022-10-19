@@ -1,6 +1,4 @@
-import datetime
 from pickle import FALSE
-
 import pygame
 from pygame import gfxdraw
 import numpy as np
@@ -299,7 +297,7 @@ class Window:
         y = road.start[1] + sin * vehicle.x
 
         self.rotated_box((x, y), (l, h),
-                         cos=cos, sin=sin, centered=True, isChangedPath=vehicle.isChangedPath)
+                         cos=cos, sin=sin, centered=True, isChangedPath=False)
 
     def draw_vehicles(self):
         for road in self.sim.roads:

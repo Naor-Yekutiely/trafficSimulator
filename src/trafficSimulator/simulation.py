@@ -10,14 +10,12 @@ import os
 import json
 import time
 import numpy as np
-#import networkx as nx
 
 
 class Simulation:
     def __init__(self, influxdb_client, isDTLS=False, config={}):
         # Set default configuration
         self.isDTLS = isDTLS
-        # TODO: Use the simulation_number in  all data send to influxDB
         self.influxdb_client = influxdb_client
         self.set_default_config()
 
@@ -84,10 +82,13 @@ class Simulation:
 
     def check_if_path_cahnged_and_log(self, old_edgesPath, new_edgesPath, new_vehicle):
         if (not(np.array_equal(old_edgesPath, new_edgesPath))):
-            print(
-                f"path has changed. isDTLS: {self.isDTLS}\n oldPath: {old_edgesPath}\n newPath: {new_edgesPath}")
-            new_vehicle.isChangedPath = True
-            # TODO: log here to influx andm check why path chnage is not so good somthims..
+            # print(
+            #     f"path has changed. isDTLS: {self.isDTLS}\n oldPath: {old_edgesPath}\n newPath: {new_edgesPath}")
+            # new_vehicle.isChangedPath = True This line can be used in the feature to distingues between changed paths vehicles from the rest.
+            tags = {
+                "isDTLS": self.isDTLS
+            }
+            self.influxdb_client.log_to_influx('changedPath', tags)
 
     def updatePath(self, vehicle, road):
         new_vehicle = deepcopy(vehicle)
@@ -108,7 +109,6 @@ class Simulation:
             self.roads[next_road_index].vehicles.append(
                 new_vehicle)
             new_vehicle.current_road = self.roads[next_road_index]
-            # TODO: Here log for evrey road his wieth / number of v on the road
             if (not(new_vehicle.current_road.isInner)):  # Don't Log data for inner roads
                 tags = {
                     "isDTLS": self.isDTLS,
