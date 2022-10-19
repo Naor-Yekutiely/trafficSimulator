@@ -16,7 +16,6 @@ class Graph:
     def initG(self):
         f = open(f"{os.getcwd()}/src/SimulationConfig/Graph_Data.json")
         self.graphData = json.load(f)
-        # TODO: Change nodes to vertexs as node will be used as intersactions
         for vertex in self.graphData["vertices"]:
             self.vertices.append(
                 {"name": vertex['name'], "nodes": vertex['nodes']})

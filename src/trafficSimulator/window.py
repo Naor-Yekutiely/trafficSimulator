@@ -38,7 +38,10 @@ class Window:
         # Create a pygame window
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.flip()
-
+        if (self.sim.isDTLS):
+            pygame.display.set_caption('DTLS simulation window')
+        else:
+            pygame.display.set_caption('Normal simulation window')
         # Fixed fps
         clock = pygame.time.Clock()
 
