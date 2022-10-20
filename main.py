@@ -3,7 +3,9 @@ import os
 import subprocess
 
 # TODO:
-# 2. Add more boards in Grafana to make it look more impressive.
+# 1. Work on Grafana to make it more accurate and informable.
+# 2. Add more simulation configuration files to show more cases.
+# 3. Floating cars in DTLS after long running time..
 
 main_window = Tk()
 main_window.eval('tk::PlaceWindow . center')

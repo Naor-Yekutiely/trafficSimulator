@@ -6,7 +6,6 @@ from copy import deepcopy
 
 class Graph:
     def __init__(self):
-        #self.edges = edges
         self.G = nx.DiGraph()
         self.edgeToIndex = []
         self.edgesNodes = {}
