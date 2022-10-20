@@ -3,7 +3,6 @@ import os
 import subprocess
 
 # TODO:
-# 1. Remove all unneeded files and fix all comments typos.
 # 2. Add more boards in Grafana to make it look more impressive.
 
 main_window = Tk()
