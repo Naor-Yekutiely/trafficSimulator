@@ -1,4 +1,3 @@
-from cgi import print_arguments
 from trafficSimulator import *
 import os
 import sys
@@ -8,7 +7,7 @@ import time
 
 
 def start_simulation(isDTLS, influxdb_client, sim_path):
-    # isDTLS param & simulation_number params
+    # isDTLS param & simulation_number param
     sim = Simulation(influxdb_client, isDTLS)
     G = Graph()
 
@@ -47,6 +46,7 @@ if __name__ == '__main__':
     docker_path = f"{wd}/infrastructure"
     os.chdir(docker_path)
     subprocess.call(['docker-compose', 'up', '-d'])
+    # Sleep for 2 seconds to let Influx initialize before initializing InfluxLogger
     time.sleep(2)
     os.chdir(wd)
     influxdb_client = InfluxLogger(sim_name)

@@ -1,6 +1,3 @@
-#from lib2to3.pgen2 import grammar
-#from unittest import case
-from asyncio import constants
 from .road import Road
 from .node import Node
 from copy import deepcopy
@@ -29,7 +26,7 @@ class Simulation:
         self.frame_count = 0    # Frame count keeping
         self.dt = 1/60          # Simulation time step
         self.roads = []         # Array to store roads
-        self.nodes = []        # Array to hold Nodes
+        self.nodes = []         # Array to hold Nodes
         self.roadsDic = {}
         self.generators = []
         self.traffic_signals = []
@@ -82,9 +79,8 @@ class Simulation:
 
     def check_if_path_cahnged_and_log(self, old_edgesPath, new_edgesPath, new_vehicle):
         if (not(np.array_equal(old_edgesPath, new_edgesPath))):
-            # print(
-            #     f"path has changed. isDTLS: {self.isDTLS}\n oldPath: {old_edgesPath}\n newPath: {new_edgesPath}")
-            # new_vehicle.isChangedPath = True This line can be used in the feature to distingues between changed paths vehicles from the rest.
+            # new_vehicle.isChangedPath = True
+            # The line above This line can be used in the feature to distinguish between changed paths vehicles from the rest.
             tags = {
                 "isDTLS": self.isDTLS
             }
@@ -132,13 +128,13 @@ class Simulation:
         return new_vehicle, next_road_index, old_edgesPath
 
     def updateWieghts_notDTLS(self, new_vehicle, next_road_index, road):
-        # decrese the leaving road weight and increasse comming road wieght.
+        # decrease the leaving road weight and increase the coming road weight
         factor = 0
         if(new_vehicle.l == 8):  # A bus is switching roads
             factor = 0.4
         elif(new_vehicle.l == 4):  # A car is switching roads
             factor = 0.3
-        else:  # A  motorcycle is switching roads
+        else:  # A motorcycle is switching roads
             factor = 0.2
 
         road.wieght -= factor
@@ -153,13 +149,13 @@ class Simulation:
             factor = 0.4
         elif(new_vehicle.l == 4):  # A car is switching roads
             factor = 0.3
-        else:  # A  motorcycle is switching roads
+        else:  # A motorcycle is switching roads
             factor = 0.2
-        # dicrease old path weights with respect to factor and the distance from the road
+        # decrease old path weights with respect to factor and the distance from the road
         for index, road in enumerate(old_edgesPath):
             self.roadsDic[road].wieght -= factor * 1 / (index + 1)
         if(len(new_vehicle.path) > 0):
-            # increasse new path weights with respect to factor and the distance from the road
+            # increase new path weights with respect to factor and the distance from the road
             for index, road_name in enumerate(new_vehicle.edgesPath):
                 self.roadsDic[road_name].wieght += factor * 1 / (index + 1)
 
@@ -187,26 +183,24 @@ class Simulation:
                 continue
             # If not
             vehicle = road.vehicles[0]
-            # If first vehicle is out of road bounds
+            # If the first vehicle is out of road bounds
             if vehicle.x >= road.length:
-                # If vehicle has a next road - still not reached end of the path
+                # If vehicle has a next road - still has not reached the end of the path
                 if len(vehicle.path) > 0:
                     # Update current road to next road
-                    # use next road obj and not index..
-                    vehicle.current_road_index += 1
                     new_vehicle, next_road_index, old_edgesPath = self.updatePath(
                         vehicle, road)
                     if(self.isDTLS):
-                        # dicrease old path weights with respect to factor and the distance from the road
-                        # increasse new path weights with respect to factor and the distance from the road
+                        # decrease old path weights with respect to factor and the distance from the road
+                        # increase new path weights with respect to factor and the distance from the road
                         self.updateWieghts_DTLS(
                             new_vehicle, next_road_index, road, old_edgesPath)
                     else:
-                        # decrese the leaving road weight and increasse comming road wieght.
+                        # decrease the leaving road weight and increase the coming road weight
                         self.updateWieghts_notDTLS(
                             new_vehicle, next_road_index, road)
 
-                # In all cases, remove it from its road
+                # In all cases, remove it from it's road
                 road.vehicles.popleft()
 
         # Increment time

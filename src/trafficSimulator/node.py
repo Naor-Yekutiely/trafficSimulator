@@ -1,20 +1,7 @@
-# from operator import index
-# from scipy.spatial import distance
-# from collections import deque
-from cmath import inf
-from dis import dis
-import os
-import json
-from tkinter import N
 import numpy as np
-import math
 import time
-from copy import deepcopy
 from scipy.spatial import distance
 from itertools import combinations
-# from trafficSimulator.graph import Graph
-
-# from trafficSimulator.vehicle import Vehicle
 
 
 class Node:
@@ -29,7 +16,6 @@ class Node:
         for vertex in self.G.vertices:
             tmpIcommingRoads_ = []
             tmpInnerRoads_ = []
-            isOnluUp = False
             if(len(vertex['nodes']) == 2):
                 up_node = vertex['nodes'][0]
                 down_node = vertex['nodes'][1]
@@ -60,12 +46,12 @@ class Node:
         nearst_vehicles = []
         for road in vertex["incomming_roads"]:
             if(len(road["roadobj"].vehicles) > 0):
-                # Add last vehicle from each road in incomming_roads of current node if it's not stopped.
+                # Add the last vehicle from each road in the incomming_roads of the current node if it's not stopped.
                 if(not(road["roadobj"].vehicles[0].stopped)):
                     nearst_vehicles.append(road["roadobj"].vehicles[0])
         for road in vertex["inner_roads"]:
             if(len(road["roadobj"].vehicles) > 0):
-                # Add all vehicles in inner roads
+                # Add all vehicles that are on inner roads
                 vehicles = road["roadobj"].vehicles
                 filterd_vehicles = list(
                     filter(lambda vehicles: vehicles.stopped != True, vehicles))
@@ -73,7 +59,7 @@ class Node:
         return nearst_vehicles
 
     def getChosenCollision(self, vertex, nearst_vehicles):
-        # get all subarrays of size 2 from nearst_vehicles
+        # Get all subarrays of size 2 from nearst_vehicles
         possible_collisions = [list(j)
                                for j in combinations(nearst_vehicles, 2)]
         chosen_collision_vehicles = None
@@ -87,9 +73,9 @@ class Node:
                 min_dist = dist
                 chosen_collision_vehicles = comb
         if(chosen_collision_vehicles != None):
-            # verify collision
+            # Verify collision
             if(self.verifyCollision(vertex, chosen_collision_vehicles)):
-                # no conflict found
+                # No conflict found
                 return None
             collision = [
                 {
@@ -112,10 +98,10 @@ class Node:
 
     def verifyCollision(self, vertex, chosen_collision_vehicles):
         # Check for conflict logic:
-        # A = set of all vertex in all nearset vehicles paths.
-        # B = set of vertcies of the current vertex
+        # A = set of all vertex in all nearest vehicle paths.
+        # B = set of vertices of the current vertex
         # C = (A intersection B)
-        # Conflict exsist only if C is not emptey.
+        # Conflict exists only if C is not empty.
         vertcies_paths = []
         for vehicle in chosen_collision_vehicles:
             p = set()
@@ -125,14 +111,14 @@ class Node:
         vertcies_paths.append(
             (set(vertex["nodes"])))
         union = set.intersection(*vertcies_paths)
-        return len(union) == 0  # True here means that no conflict found
+        return len(union) == 0  # True here means that no conflict was found
 
     def checkWinnerDeuToTTLTimeOut(self, collision_vehicle_A, collision_vehicle_B, current_time):
         winner_vehicle = None
         losser_vehicle = None
         Vehicle_A = collision_vehicle_A['vehicle']
         Vehicle_B = collision_vehicle_B['vehicle']
-        # Max time we allow for a vechile to wait before he preemptively takes the right of way. - in seconds
+        # Max time we allow for a vehicle to wait before he preemptively takes the right of way. - in seconds
         starvation_TTL_factor = 15
         if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor) or (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > starvation_TTL_factor)):
             if((Vehicle_A.waitTime != None and current_time - Vehicle_A.waitTime > starvation_TTL_factor) and (Vehicle_B.waitTime != None and current_time - Vehicle_B.waitTime > starvation_TTL_factor)):
@@ -260,7 +246,7 @@ class Node:
         # 1.1. Winner by Inner Road
         # 1.2. Winner by Road Transfer
         # 2. Winner by TTL
-        # 3. Winner by Road Priorty
+        # 3. Winner by Road Priority
         # 4. Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
@@ -273,7 +259,7 @@ class Node:
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToRoadTransfer(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):
-            # Found winner due to Inner Road
+            # Found winner due to Road Transfer
             return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToTTLTimeOut(
             collision_vehicle_A, collision_vehicle_B, current_time)
@@ -283,7 +269,7 @@ class Node:
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToPriority(
             collision_vehicle_A, collision_vehicle_B)
         if(winner_vehicle != None and losser_vehicle != None):
-            # Found winner due to Traffic Density
+            # Found winner due to Priority
             return winner_vehicle, losser_vehicle
         winner_vehicle, losser_vehicle = self.checkWinnerDeuToProximity(
             collision_vehicle_A, collision_vehicle_B)
@@ -313,7 +299,6 @@ class Node:
                             collision, current_time)
                         if(losser_vehicle.waitTime == None):
                             losser_vehicle.waitTime = time.perf_counter()
-                        # winner_vehicle.waitTime = None -> this is now set only when vehicle really leaves the road.
                         signal = losser_vehicle.current_road.traffic_signal
                         losser_vehicle.current_road.traffic_signal.current_cycle_index = 1
                         distance_from_node = losser_vehicle.current_road.length - \

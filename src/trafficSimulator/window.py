@@ -10,10 +10,8 @@ class Window:
     def __init__(self, sim, config={}):
         # Simulation to draw
         self.sim = sim
-
         # Set default configurations
         self.set_default_config()
-
         # Update configurations
         for attr, val in config.items():
             setattr(self, attr, val)
@@ -132,8 +130,6 @@ class Window:
         self.screen.fill([255, 255, 255])
         self.screen.blit(self.image, self.rect)
 
-        #self.screen.fill((r, g, b))
-
     def line(self, start_pos, end_pos, color):
         """Draws a line."""
         gfxdraw.line(
@@ -165,12 +161,12 @@ class Window:
         """Draws a rectangle center at *pos* with size *size* rotated anti-clockwise by *angle*."""
         x, y = pos
         l, h = size
-        # diffrent color for diffrent
-        if l == 2:  # motor cycle
+        # diffrent color for diffrent vehicles
+        if l == 2:  # motorcycle
             color = (0, 255, 255)
-        if l == 4:  # private
+        if l == 4:  # car
             color = (255, 255, 0)
-        if l == 8:  # truck
+        if l == 8:  # bus
             color = (255, 0, 255)
         if (isChangedPath):
             color = (255, 255, 255)
@@ -267,15 +263,6 @@ class Window:
                 color=(180, 180, 220),
                 centered=False
             )
-            # Draw road lines
-            # self.rotated_box(
-            #     road.start,
-            #     (road.length, 0.25),
-            #     cos=road.angle_cos,
-            #     sin=road.angle_sin,
-            #     color=(0, 0, 0),
-            #     centered=False
-            # )
 
             # Draw road arrow
             if road.length > 5:

@@ -48,7 +48,6 @@ class Vehicle:
 
         self.path = []
         self.edgesPath = []
-        self.current_road_index = 0
         self.current_road = None
         self.waitTime = None
         self.time_added = None

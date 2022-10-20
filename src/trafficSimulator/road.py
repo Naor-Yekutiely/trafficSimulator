@@ -22,7 +22,6 @@ class Road:
         self.length = distance.euclidean(self.start, self.end)
         self.angle_sin = (self.end[1]-self.start[1]) / self.length
         self.angle_cos = (self.end[0]-self.start[0]) / self.length
-        # self.angle = np.arctan2(self.end[1]-self.start[1], self.end[0]-self.start[0])
         self.has_traffic_signal = False
 
     def set_traffic_signal(self, signal, group):
@@ -47,7 +46,6 @@ class Road:
             return False
         else:
             first_vehicle_in_next_road = next_road.vehicles[-1]
-            # min_Delta = len 0f max vechile men + safty self.l = 8
             if(first_vehicle_in_next_road.x < 12):
                 return True
             return False
