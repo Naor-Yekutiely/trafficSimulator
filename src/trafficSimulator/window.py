@@ -3,6 +3,7 @@ import pygame
 from pygame import gfxdraw
 import numpy as np
 import time
+import os
 
 
 class Window:
@@ -36,6 +37,7 @@ class Window:
         """Shows a window visualizing the simulation and runs the loop function."""
 
         # Create a pygame window
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.flip()
         if (self.sim.isDTLS):

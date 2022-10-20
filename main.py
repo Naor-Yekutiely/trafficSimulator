@@ -7,6 +7,7 @@ import subprocess
 # 2. Add more boards in Grafana to make it look more impressive.
 
 main_window = Tk()
+main_window.eval('tk::PlaceWindow . center')
 main_window.geometry("450x200")
 background_photo = PhotoImage(file=os.getcwd() +
                               "/src/background/bg.png")
