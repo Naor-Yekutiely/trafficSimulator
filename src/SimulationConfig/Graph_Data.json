@@ -1761,7 +1761,7 @@
             "name": "E_8",
             "nodes": ["V_0_5_U", "V_0_4_U"],
             "priority": 1,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_9",
@@ -1833,7 +1833,7 @@
             "name": "E_20",
             "nodes": ["V_0_4_D", "V_0_5_D"],
             "priority": 1,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_21",
@@ -2223,79 +2223,79 @@
             "name": "E_L_1",
             "nodes": ["V_0_0_D", "V_1_0_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_2",
             "nodes": ["V_1_1_U", "V_0_1_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_3",
             "nodes": ["V_0_2_D", "V_1_2_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_4",
             "nodes": ["V_1_3_U", "V_0_3_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_5",
             "nodes": ["V_0_4_D", "V_1_4_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_6",
             "nodes": ["V_0_5_D", "V_1_6_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_7",
             "nodes": ["V_1_7_U", "V_0_6_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_8",
             "nodes": ["V_0_7_D", "V_1_8_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_9",
             "nodes": ["V_1_9_U", "V_0_8_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_10",
             "nodes": ["V_0_9_D", "V_1_10_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_11",
             "nodes": ["V_1_11_U", "V_0_10_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_12",
             "nodes": ["V_0_11_D", "V_1_12_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_13",
             "nodes": ["V_1_13_U", "V_0_12_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_1_0_D",
@@ -2721,109 +2721,109 @@
             "name": "E_L_14",
             "nodes": ["V_1_0_D", "V_2_0_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_15",
             "nodes": ["V_2_1_U", "V_1_1_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_16",
             "nodes": ["V_1_2_D", "V_2_2_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_17",
             "nodes": ["V_2_3_U", "V_1_3_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_18",
             "nodes": ["V_1_4_D", "V_2_4_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_19",
             "nodes": ["V_2_5_U", "V_1_5_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_20",
             "nodes": ["V_1_6_D", "V_2_6_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_21",
             "nodes": ["V_2_7_U", "V_1_7_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_22",
             "nodes": ["V_1_8_D", "V_2_8_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_23",
             "nodes": ["V_2_9_U", "V_1_9_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_24",
             "nodes": ["V_1_10_D", "V_2_10_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_25",
             "nodes": ["V_2_11_U", "V_1_11_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_26",
             "nodes": ["V_1_12_D", "V_2_12_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_27",
             "nodes": ["V_2_13_U", "V_1_13_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_28",
             "nodes": ["V_1_14_D", "V_2_14_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_29",
             "nodes": ["V_2_15_U", "V_1_15_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_30",
             "nodes": ["V_1_16_D", "V_2_16_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_31",
             "nodes": ["V_2_17_U", "V_1_17_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_2_0_D",
@@ -3249,109 +3249,109 @@
             "name": "E_L_32",
             "nodes": ["V_2_0_D", "V_3_0_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_33",
             "nodes": ["V_3_1_U", "V_2_1_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_34",
             "nodes": ["V_2_2_D", "V_3_2_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_35",
             "nodes": ["V_3_3_U", "V_2_3_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_36",
             "nodes": ["V_2_4_D", "V_3_4_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_37",
             "nodes": ["V_3_5_U", "V_2_5_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_38",
             "nodes": ["V_2_6_D", "V_3_6_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_39",
             "nodes": ["V_3_7_U", "V_2_7_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_40",
             "nodes": ["V_2_8_D", "V_3_8_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_41",
             "nodes": ["V_3_9_U", "V_2_9_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_42",
             "nodes": ["V_2_10_D", "V_3_10_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_43",
             "nodes": ["V_3_11_U", "V_2_11_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_44",
             "nodes": ["V_2_12_D", "V_3_12_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_45",
             "nodes": ["V_3_13_U", "V_2_13_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_46",
             "nodes": ["V_2_14_D", "V_3_14_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_47",
             "nodes": ["V_3_15_U", "V_2_15_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_48",
             "nodes": ["V_2_16_D", "V_3_16_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_49",
             "nodes": ["V_3_17_U", "V_2_17_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_3_0_D",
@@ -3777,109 +3777,109 @@
             "name": "E_L_50",
             "nodes": ["V_3_0_D", "V_4_0_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_51",
             "nodes": ["V_4_1_U", "V_3_1_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_52",
             "nodes": ["V_3_2_D", "V_4_2_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_53",
             "nodes": ["V_4_3_U", "V_3_3_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_54",
             "nodes": ["V_3_4_D", "V_4_4_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_55",
             "nodes": ["V_4_5_U", "V_3_5_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_56",
             "nodes": ["V_3_6_D", "V_4_6_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_57",
             "nodes": ["V_4_7_U", "V_3_7_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_58",
             "nodes": ["V_3_8_D", "V_4_8_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_59",
             "nodes": ["V_4_9_U", "V_3_9_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_60",
             "nodes": ["V_3_10_D", "V_4_10_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_61",
             "nodes": ["V_4_11_U", "V_3_11_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_62",
             "nodes": ["V_3_12_D", "V_4_12_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_63",
             "nodes": ["V_4_13_U", "V_3_13_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_64",
             "nodes": ["V_3_14_D", "V_4_14_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_65",
             "nodes": ["V_4_15_U", "V_3_15_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_66",
             "nodes": ["V_3_16_D", "V_4_16_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_67",
             "nodes": ["V_4_17_U", "V_3_17_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_4_0_D",
@@ -4101,102 +4101,102 @@
             "name": "E_L_68",
             "nodes": ["V_4_0_D", "V_5_0_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         }, {
             "name": "E_L_69",
             "nodes": ["V_5_1_U", "V_4_1_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_70",
             "nodes": ["V_4_2_D", "V_5_2_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_71",
             "nodes": ["V_5_3_U", "V_4_3_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_72",
             "nodes": ["V_4_4_D", "V_5_4_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_73",
             "nodes": ["V_5_5_U", "V_4_5_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_74",
             "nodes": ["V_4_6_D", "V_5_6_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_75",
             "nodes": ["V_5_7_U", "V_4_7_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_76",
             "nodes": ["V_4_8_D", "V_5_8_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_77",
             "nodes": ["V_5_9_U", "V_4_9_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_78",
             "nodes": ["V_4_10_D", "V_5_10_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_79",
             "nodes": ["V_5_11_U", "V_4_11_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_80",
             "nodes": ["V_4_12_D", "V_5_12_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_81",
             "nodes": ["V_5_13_U", "V_4_13_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_82",
             "nodes": ["V_4_14_D", "V_5_14_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_83",
             "nodes": ["V_5_15_U", "V_4_15_D"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         },
         {
             "name": "E_L_84",
             "nodes": ["V_4_16_D", "V_5_16_U"],
             "priority": 2,
-            "weight": 2
+            "weight": 1.5
         }
 
     ]

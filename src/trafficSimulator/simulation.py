@@ -131,9 +131,9 @@ class Simulation:
         # decrease the leaving road weight and increase the coming road weight
         factor = 0
         if(new_vehicle.l == 8):  # A bus is switching roads
-            factor = 0.4
+            factor = 0.6
         elif(new_vehicle.l == 4):  # A car is switching roads
-            factor = 0.3
+            factor = 0.4
         else:  # A motorcycle is switching roads
             factor = 0.2
 
@@ -146,11 +146,11 @@ class Simulation:
     def updateWieghts_DTLS(self, new_vehicle, next_road_index, road, old_edgesPath):
         factor = 0
         if(new_vehicle.l == 8):  # A bus is switching roads
-            factor = 0.4
+            factor = 0.8
         elif(new_vehicle.l == 4):  # A car is switching roads
-            factor = 0.3
+            factor = 0.6
         else:  # A motorcycle is switching roads
-            factor = 0.2
+            factor = 0.3
         # decrease old path weights with respect to factor and the distance from the road
         for index, road in enumerate(old_edgesPath):
             self.roadsDic[road].wieght -= factor * 1 / (index + 1)

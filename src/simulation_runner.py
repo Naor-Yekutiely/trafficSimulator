@@ -36,12 +36,12 @@ def start_simulation(isDTLS, influxdb_client, sim_path):
 
 if __name__ == '__main__':
     # Start all infra - InfluxDB, grafana, telegraph
-    if (len(sys.argv) < 3):
-        raise Exception(f"3 args were expected. got: {sys.argv}")
-    sim_path = sys.argv[1]
-    sim_name = sys.argv[2]
-    # sim_path = f"{os.getcwd()}/src/SimulationConfig/Heavy_Traffic_Data.json"
-    # sim_name = "Heavy_Traffic"
+    # if (len(sys.argv) < 3):
+    #     raise Exception(f"3 args were expected. got: {sys.argv}")
+    # sim_path = sys.argv[1]
+    # sim_name = sys.argv[2]
+    sim_path = f"{os.getcwd()}/src/SimulationConfig/Heavy_Traffic_Data.json"
+    sim_name = "Heavy_Traffic"
     wd = os.getcwd()
     docker_path = f"{wd}/infrastructure"
     os.chdir(docker_path)

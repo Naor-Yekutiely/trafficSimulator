@@ -52,14 +52,29 @@ class VehicleGenerator:
                 road.vehicles.append(self.upcoming_vehicle)
                 self.upcoming_vehicle.current_road = road
                 self.upcoming_vehicle.position = road.start
+                # Update the upcoming_vehicle's path according to the current roads state
+                self.upcoming_vehicle.path = self.sim.G.getPath(
+                    self.upcoming_vehicle.source, self.upcoming_vehicle.target)
+                self.upcoming_vehicle.edgesPath = self.sim.G.indexPathToEdgesPath(
+                    self.upcoming_vehicle.path)
+
                 # increase added roads weight according to simulation type - DTLS or Normal simulation
                 factor = 0
                 if(self.upcoming_vehicle.l == 8):  # A bus is switching roads
-                    factor = 0.4
+                    if (self.sim.isDTLS):
+                        factor = 0.8
+                    else:
+                        factor = 0.6
                 elif(self.upcoming_vehicle.l == 4):  # A car is switching roads
-                    factor = 0.3
+                    if (self.sim.isDTLS):
+                        factor = 0.6
+                    else:
+                        factor = 0.4
                 else:  # A motorcycle is switching roads
-                    factor = 0.2
+                    if (self.sim.isDTLS):
+                        factor = 0.3
+                    else:
+                        factor = 0.2
                 if(self.sim.isDTLS):
                     for index, road_name in enumerate(self.upcoming_vehicle.edgesPath):
                         self.sim.roadsDic[road_name].wieght += factor * \
