@@ -32,7 +32,7 @@ class InfluxLogger:
         tags["date_time"] = dt_string
         data.append({
             "measurement": measurement_name,
-            "tags": tags,
+            # "tags": tags,
             "fields": tags
         })
         self.waitUntilInfluxIsReady()

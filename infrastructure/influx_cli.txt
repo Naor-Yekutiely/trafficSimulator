@@ -1,0 +1,12 @@
+|   ------------------------------------------------------------------------------  |
+| Command                                   | Usage Example                         |
+|   ------------------------------------------------------------------------------  |
+|   influx                                  |                                       |
+|   exit                                    |                                       |       
+|   show DATABASES                          |                                       |
+|   use <DATABASE-NAME>                     |   use TrafficSimultionDB              |
+|   show MEASUREMENTS                       |                                       |
+|   drop MEASUREMENT <MEASUREMENT-NAME>     |   drop MEASUREMENT Simulation_counter |
+|   ------------------------------------------------------------------------------  |
+
+    
