@@ -24,7 +24,7 @@ def start_simulation(isDTLS, influxdb_client, sim_path):
                                                 'edgesPath': G.indexPathToEdgesPath(G.getPath(path["source"], path["target"])),
                                                 'source': path["source"], 'target': path["target"]}])
     sim.create_gen({
-        'vehicle_rate': 800,
+        'vehicle_rate': 0.01,  # Generate a new vehicle evrey 10ms
         'vehicles': vehiclesGen
     })
 

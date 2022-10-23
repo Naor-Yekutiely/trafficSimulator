@@ -1,5 +1,7 @@
 from .vehicle import Vehicle
 from numpy.random import randint, choice
+from numpy import interp
+#from scipy.interpolate import interp1d
 from collections import deque
 import time
 
@@ -8,17 +10,20 @@ class VehicleGenerator:
     def __init__(self, sim, config={}):
         self.sim = sim
         self.last_added_time_tmp = 0.0
+        self.probabilities = []
+        self.configs = []
         # Set default configurations
         self.set_default_config()
         # Update configurations
         for attr, val in config.items():
             setattr(self, attr, val)
+        self.indices = [i for i in range(len(self.vehicles))]
         # Calculate properties
         self.init_properties()
 
     def set_default_config(self):
         """Set default configuration"""
-        self.vehicle_rate = 0.01  # Generate a new vehicle evrey 100ms
+        self.vehicle_rate = 0.01  # Generate a new vehicle evrey 10ms
         self.vehicles = [
             (1, {})
         ]
@@ -26,21 +31,22 @@ class VehicleGenerator:
         self.q = deque()
 
     def init_properties(self):
+        range = 0
+        for (weight, config) in self.vehicles:
+            range += weight
+        for (weight, config) in self.vehicles:
+            self.probabilities.append(interp(weight, [0, range], [0, 1]))
+            self.configs.append(config)
         self.upcoming_vehicle = self.generate_vehicle()
 
     def generate_vehicle(self):
-        """Returns a random vehicle from self.vehicles with random proportions"""
-        total = sum(pair[0] for pair in self.vehicles)
-        r = randint(1, total+1)
-        for (weight, config) in self.vehicles:
-            r = r - weight
-            if r <= 0:
-                return Vehicle(config)
+        chosen_index = choice(self.indices, p=self.probabilities)
+        return Vehicle(self.configs[chosen_index])
 
     def update(self):
         """Add vehicles"""
         delta_space = 5
-        if self.sim.current_time - self.last_added_time_tmp >= 0.01:
+        if self.sim.current_time - self.last_added_time_tmp >= self.vehicle_rate:
             # If the time elapsed after the last added vehicle is greater than vehicle_period then generate a vehicle
             road = self.sim.roads[self.upcoming_vehicle.path[0]]
             if len(road.vehicles) == 0\
