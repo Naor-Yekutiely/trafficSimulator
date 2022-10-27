@@ -24,7 +24,7 @@ def start_simulation(isDTLS, influxdb_client, sim_path):
                                                 'edgesPath': G.indexPathToEdgesPath(G.getPath(path["source"], path["target"])),
                                                 'source': path["source"], 'target': path["target"]}])
     sim.create_gen({
-        'vehicle_rate': 0.01,  # Generate a new vehicle evrey 10ms
+        'vehicle_rate': 1,  # Generate a new vehicle evrey 100ms
         'vehicles': vehiclesGen
     })
 
@@ -36,12 +36,12 @@ def start_simulation(isDTLS, influxdb_client, sim_path):
 
 if __name__ == '__main__':
     # Start all infra - InfluxDB, grafana, telegraph
-    # if (len(sys.argv) < 3):
-    #     raise Exception(f"3 args were expected. got: {sys.argv}")
-    # sim_path = sys.argv[1]
-    # sim_name = sys.argv[2]
-    sim_path = f"{os.getcwd()}/src/SimulationConfig/Heavy_Traffic_Data.json"
-    sim_name = "Heavy_Traffic"
+    if (len(sys.argv) < 3):
+        raise Exception(f"3 args were expected. got: {sys.argv}")
+    sim_path = sys.argv[1]
+    sim_name = sys.argv[2]
+    # sim_path = f"{os.getcwd()}/src/SimulationConfig/Heavy_Traffic_Data.json"
+    # sim_name = "Heavy_Traffic"
     wd = os.getcwd()
     docker_path = f"{wd}/infrastructure"
     os.chdir(docker_path)

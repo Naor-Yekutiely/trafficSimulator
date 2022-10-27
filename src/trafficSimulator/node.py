@@ -242,12 +242,16 @@ class Node:
 
     def getWinnerAndLosser(self, collision, current_time):
         # Algorithm:
-        # 1. Winner by transaction:
-        # 1.1. Winner by Inner Road
-        # 1.2. Winner by Road Transfer
-        # 2. Winner by TTL
-        # 3. Winner by Road Priority
-        # 4. Winner by proximity to the conflict Node
+        # 1. ve = getnearstv() # Get the nearst vehicles
+        # 2. Find all collisions between the nearest virchiles
+        # 3. Verify collisions and choose the most argent collision to addres.
+        # 3. if collision are found:
+        # 4.    Winner by transaction:
+        # 5.    Winner by Inner Road
+        # 6.    Winner by Road Transfer
+        # 7.    Winner by TTL
+        # 8.    Winner by Road Priority
+        # 9.    Winner by proximity to the conflict Node
         winner_vehicle = None
         losser_vehicle = None
         collision_vehicle_A, collision_vehicle_B = collision
